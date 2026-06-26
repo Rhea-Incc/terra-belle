@@ -6,6 +6,7 @@ import { TopNav, SideTimeline } from "@/components/terra/Nav";
 import { IntroLoader } from "@/components/terra/Loader";
 import { EnergyDivider } from "@/components/terra/Divider";
 import { Hero } from "@/components/terra/Hero";
+import { FlowProvider } from "@/components/terra/FlowContext";
 import {
   PlanetChapter,
   EcosystemChapter,
@@ -41,37 +42,39 @@ function Index() {
       <SmoothScroll />
       <ParticleNetwork />
       <EnergyCursor />
-      <TopNav />
-      <SideTimeline />
+      <FlowProvider>
+        <TopNav />
+        <SideTimeline />
 
-      <main className="relative z-10">
-        {/* 01 · Genesis */}
-        <Hero />
-        <EnergyDivider />
+        <main className="relative z-10">
+          {/* 01 · Genesis */}
+          <Hero />
+          <EnergyDivider />
 
-        {/* 02 · The Planet */}
-        <PlanetChapter />
-        <EnergyDivider flip />
+          {/* 02 · The Planet */}
+          <PlanetChapter />
+          <EnergyDivider flip />
 
-        {/* 03 · The Ecosystem */}
-        <EcosystemChapter />
-        <EnergyDivider />
+          {/* 03 · The Ecosystem */}
+          <EcosystemChapter />
+          <EnergyDivider />
 
-        {/* 04 · The Circular Economy */}
-        <CircularChapter />
-        <EnergyDivider flip />
+          {/* 04 · The Circular Economy */}
+          <CircularChapter />
+          <EnergyDivider flip />
 
-        {/* 05 · The Impact Engine */}
-        <ImpactChapter />
-        <EnergyDivider />
+          {/* 05 · The Impact Engine */}
+          <ImpactChapter />
+          <EnergyDivider />
 
-        {/* 06 · The Collaboration Network */}
-        <CollaborationChapter />
-        <EnergyDivider flip />
+          {/* 06 · The Collaboration Network */}
+          <CollaborationChapter />
+          <EnergyDivider flip />
 
-        {/* 07 · The Future (loops back to Genesis) */}
-        <FutureChapter />
-      </main>
+          {/* 07 · The Future (loops back to Genesis) */}
+          <FutureChapter />
+        </main>
+      </FlowProvider>
     </>
   );
 }

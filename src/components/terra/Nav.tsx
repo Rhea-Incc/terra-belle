@@ -83,7 +83,7 @@ export function TopNav() {
 }
 
 export function SideTimeline() {
-  const [active, setActive] = useState("hero");
+  const [active, setActive] = useState("genesis");
   const [hover, setHover] = useState<string | null>(null);
 
   useEffect(() => {
@@ -103,80 +103,109 @@ export function SideTimeline() {
   }, []);
 
   const activeIdx = Math.max(0, SECTIONS.findIndex((s) => s.id === active));
+  const progress = (activeIdx / Math.max(1, SECTIONS.length - 1)) * 100;
+
+  const jump = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
-    <nav className="fixed right-6 top-1/2 z-40 hidden -translate-y-1/2 lg:block" aria-label="Section progress">
-      {/* spine */}
-      <span
-        className="absolute right-[5px] top-0 h-full w-px"
-        style={{ background: "linear-gradient(to bottom, transparent, rgba(17,17,17,0.12), transparent)" }}
-      />
-      <ul className="relative flex flex-col gap-5">
+    <nav
+      className="fixed right-5 top-1/2 z-40 hidden -translate-y-1/2 md:block"
+      aria-label="Chapter progress"
+    >
+      <div className="relative flex flex-col items-end gap-9 py-6 pr-3">
+        {/* gear spine */}
+        <span
+          aria-hidden
+          className="absolute right-[10px] top-3 bottom-3 w-[2px] rounded-full"
+          style={{ background: "linear-gradient(to bottom, transparent, rgba(17,17,17,0.12) 15%, rgba(17,17,17,0.12) 85%, transparent)" }}
+        />
+        {/* progress fill */}
+        <span
+          aria-hidden
+          className="absolute right-[10px] top-3 w-[2px] rounded-full transition-[height] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+          style={{
+            height: `calc(${progress}% * 0.94 + 0px)`,
+            background: "linear-gradient(to bottom, #F4B000, #0DBB63, #0E46B8, #6B8CF7)",
+            boxShadow: "0 0 12px rgba(244,176,0,0.35)",
+          }}
+        />
+
         {SECTIONS.map((s, i) => {
           const isActive = active === s.id;
           const isPast = i < activeIdx;
+          const isHover = hover === s.id;
           return (
-            <li
+            <button
               key={s.id}
-              className="group relative flex items-center justify-end"
+              type="button"
+              onClick={() => jump(s.id)}
               onMouseEnter={() => setHover(s.id)}
               onMouseLeave={() => setHover(null)}
+              onFocus={() => setHover(s.id)}
+              onBlur={() => setHover(null)}
+              className="group relative flex items-center gap-3 outline-none"
+              aria-label={`Jump to ${s.label}`}
+              aria-current={isActive ? "true" : undefined}
             >
+              {/* floating label / preview */}
               <span
-                className={`pointer-events-none absolute right-8 whitespace-nowrap text-[11px] uppercase tracking-[0.2em] transition-all duration-300 ${
-                  hover === s.id || isActive ? "translate-x-0 opacity-100" : "translate-x-1 opacity-0"
+                className={`pointer-events-none whitespace-nowrap rounded-full border border-black/5 bg-white/85 px-3 py-1 text-[10px] uppercase tracking-[0.22em] backdrop-blur transition-all duration-300 ${
+                  isActive || isHover ? "translate-x-0 opacity-100" : "translate-x-2 opacity-0"
                 }`}
-                style={{ color: isActive ? "var(--ink)" : "var(--mist)" }}
+                style={{ color: isActive ? "var(--ink)" : "var(--mist)", boxShadow: isActive ? "0 10px 24px -12px rgba(17,17,17,0.2)" : undefined }}
               >
+                <span className="mr-2 font-semibold tabular-nums" style={{ color: "var(--ink)" }}>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
                 {s.label}
               </span>
-              <a href={`#${s.id}`} data-magnetic className="relative block h-3 w-3" aria-label={s.label}>
-                {/* core node */}
-                <span
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-500"
-                  style={{
-                    width: isActive ? 8 : 6,
-                    height: isActive ? 8 : 6,
-                    background: isActive
-                      ? "var(--ink)"
-                      : isPast
-                      ? "linear-gradient(135deg, var(--gold), var(--green))"
-                      : "transparent",
-                    border: isActive || isPast ? "none" : "1px solid rgba(17,17,17,0.25)",
-                  }}
-                />
-                {/* orbiting energy ring on active */}
-                {isActive && (
+
+              {/* indent / gear tooth */}
+              <span
+                className="relative flex items-center justify-center rounded-full bg-white transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                style={{
+                  width: isActive ? 22 : 14,
+                  height: isActive ? 22 : 14,
+                  border: "1px solid rgba(17,17,17,0.18)",
+                  borderColor: isActive ? "var(--ink)" : isPast ? "rgba(13,187,99,0.55)" : "rgba(17,17,17,0.18)",
+                  boxShadow: isActive
+                    ? "0 0 0 4px rgba(255,255,255,0.95), 0 8px 24px -10px rgba(17,17,17,0.25)"
+                    : isHover
+                    ? "0 0 0 3px rgba(255,255,255,0.95)"
+                    : "0 0 0 3px rgba(255,255,255,0.95)",
+                  transform: isHover && !isActive ? "translateX(-3px) scale(1.1)" : isActive ? "translateX(-4px)" : "translateX(0)",
+                }}
+              >
+                {isActive ? (
                   <>
                     <span
-                      className="absolute left-1/2 top-1/2 h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full border"
-                      style={{ borderColor: "rgba(244,176,0,0.5)", animation: "orbitRing 4s linear infinite" }}
+                      className="absolute inset-[-6px] rounded-full border"
+                      style={{ borderColor: "rgba(244,176,0,0.55)", borderStyle: "dashed", animation: "orbitRing 8s linear infinite" }}
                     />
                     <span
-                      className="absolute left-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full"
-                      style={{
-                        background: "var(--gold)",
-                        boxShadow: "0 0 8px var(--gold)",
-                        transformOrigin: "0 0",
-                        animation: "orbitDot 4s linear infinite",
-                      }}
+                      className="h-1.5 w-1.5 rounded-full"
+                      style={{ background: "var(--ink)", boxShadow: "0 0 8px var(--gold)" }}
                     />
                   </>
-                )}
-              </a>
-            </li>
+                ) : isPast ? (
+                  <span
+                    className="h-1.5 w-1.5 rounded-full"
+                    style={{ background: "linear-gradient(135deg, var(--gold), var(--green))" }}
+                  />
+                ) : null}
+              </span>
+            </button>
           );
         })}
-      </ul>
+      </div>
       <style>{`
         @keyframes orbitRing {
-          0%   { transform: translate(-50%,-50%) rotate(0deg) scale(1); opacity: 0.6; }
-          50%  { transform: translate(-50%,-50%) rotate(180deg) scale(1.15); opacity: 1; }
-          100% { transform: translate(-50%,-50%) rotate(360deg) scale(1); opacity: 0.6; }
-        }
-        @keyframes orbitDot {
-          from { transform: translate(-50%,-50%) rotate(0deg) translateX(12px); }
-          to   { transform: translate(-50%,-50%) rotate(360deg) translateX(12px); }
+          0%   { transform: rotate(0deg); opacity: 0.7; }
+          50%  { opacity: 1; }
+          100% { transform: rotate(360deg); opacity: 0.7; }
         }
       `}</style>
     </nav>

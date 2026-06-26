@@ -7,6 +7,28 @@ import { EcosystemMap } from "./EcosystemMap";
 import { CircularFlow } from "./CircularFlow";
 import { CountUp } from "./CountUp";
 import { PartnerConstellation } from "./Constellation";
+import { FLOWS, useFlow } from "./FlowContext";
+
+/** Top-of-chapter indicator that lights up when a CircularFlow is energising this chapter. */
+function FlowAccent({ chapter }: { chapter: string }) {
+  const { active } = useFlow();
+  const flow = active ? FLOWS[active] : null;
+  const energised = !!flow && flow.chapters.includes(chapter);
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-x-6 top-0 h-px origin-left transition-all duration-700"
+      style={{
+        background: energised
+          ? `linear-gradient(90deg, transparent, ${flow!.color}, transparent)`
+          : "rgba(17,17,17,0.04)",
+        transform: energised ? "scaleX(1)" : "scaleX(0.4)",
+        opacity: energised ? 1 : 0.5,
+        boxShadow: energised ? `0 0 18px ${flow!.color}88` : "none",
+      }}
+    />
+  );
+}
 
 /* ---------- Shared atoms ---------- */
 
@@ -27,17 +49,34 @@ function ChapterMeta({ index, title, arc }: { index: string; title: string; arc:
   );
 }
 
-function Bridge({ to, label }: { to: string; label: string }) {
+function Bridge({ from, to, label }: { from: string; to: string; label: string }) {
+  const { active } = useFlow();
+  const flow = active ? FLOWS[active] : null;
+  const contextual = flow?.bridges[from];
+  const display = contextual ?? label;
+  const color = flow?.color;
   return (
     <Reveal delay={0.1}>
       <div className="mx-auto mt-24 max-w-3xl border-t border-black/5 pt-10 text-center">
-        <div className="text-[11px] uppercase tracking-[0.28em] text-mist">Next</div>
+        <div
+          className="flex items-center justify-center gap-3 text-[11px] uppercase tracking-[0.28em] transition-colors duration-500"
+          style={{ color: flow ? color : undefined }}
+        >
+          {flow && (
+            <span
+              className="h-1.5 w-1.5 rounded-full transition-all"
+              style={{ background: color, boxShadow: `0 0 10px ${color}` }}
+            />
+          )}
+          {flow ? `${flow.label} flow` : "Next"}
+        </div>
         <a
           href={`#${to}`}
           data-magnetic
-          className="group mt-3 inline-flex items-baseline gap-3 font-display text-[clamp(1.4rem,2.4vw,2rem)] leading-snug tracking-tight"
+          className="group mt-3 inline-flex items-baseline gap-3 font-display text-[clamp(1.4rem,2.4vw,2rem)] leading-snug tracking-tight transition-colors duration-500"
+          style={{ color: flow ? color : undefined }}
         >
-          <span>{label}</span>
+          <span>{display}</span>
           <span className="transition-transform duration-500 group-hover:translate-x-2">↓</span>
         </a>
       </div>
@@ -73,6 +112,7 @@ export function PlanetChapter() {
 
   return (
     <Section id="planet" eyebrow="02 · The Planet" index="Understand">
+      <FlowAccent chapter="planet" />
       <ChapterMeta index="02" title="The Planet" arc="Understand" />
 
       <div className="grid grid-cols-1 gap-16 md:grid-cols-12">
@@ -109,7 +149,7 @@ export function PlanetChapter() {
         ))}
       </div>
 
-      <Bridge to="ecosystem" label="If the challenges are connected, the answer must be too." />
+      <Bridge from="planet" to="ecosystem" label="If the challenges are connected, the answer must be too." />
     </Section>
   );
 }
@@ -119,6 +159,7 @@ export function PlanetChapter() {
 export function EcosystemChapter() {
   return (
     <Section id="ecosystem" eyebrow="03 · The Ecosystem" index="Discover">
+      <FlowAccent chapter="ecosystem" />
       <ChapterMeta index="03" title="The Ecosystem" arc="Discover" />
 
       <div className="grid grid-cols-1 gap-16 md:grid-cols-12">
@@ -149,7 +190,7 @@ export function EcosystemChapter() {
         </Reveal>
       </div>
 
-      <Bridge to="circular" label="Each connection becomes a flow that never ends." />
+      <Bridge from="ecosystem" to="circular" label="Each connection becomes a flow that never ends." />
     </Section>
   );
 }
@@ -159,6 +200,7 @@ export function EcosystemChapter() {
 export function CircularChapter() {
   return (
     <Section id="circular" eyebrow="04 · The Circular Economy" index="Discover">
+      <FlowAccent chapter="circular" />
       <ChapterMeta index="04" title="The Circular Economy" arc="Discover" />
 
       <div className="grid grid-cols-1 gap-16 md:grid-cols-12">
@@ -184,7 +226,7 @@ export function CircularChapter() {
         </Reveal>
       </div>
 
-      <Bridge to="impact" label="When loops turn, outcomes compound." />
+      <Bridge from="circular" to="impact" label="When loops turn, outcomes compound." />
     </Section>
   );
 }
@@ -204,6 +246,7 @@ export function ImpactChapter() {
 
   return (
     <Section id="impact" eyebrow="05 · The Impact Engine" index="Connect">
+      <FlowAccent chapter="impact" />
       <ChapterMeta index="05" title="The Impact Engine" arc="Connect" />
 
       <div className="grid grid-cols-1 gap-16 md:grid-cols-12">
@@ -254,7 +297,7 @@ export function ImpactChapter() {
         </div>
       </Reveal>
 
-      <Bridge to="collaboration" label="Numbers grow because people do." />
+      <Bridge from="impact" to="collaboration" label="Numbers grow because people do." />
     </Section>
   );
 }
@@ -264,6 +307,7 @@ export function ImpactChapter() {
 export function CollaborationChapter() {
   return (
     <Section id="collaboration" eyebrow="06 · The Collaboration Network" index="Connect">
+      <FlowAccent chapter="collaboration" />
       <ChapterMeta index="06" title="The Collaboration Network" arc="Connect" />
 
       <div className="grid grid-cols-1 gap-16 md:grid-cols-12">
@@ -294,7 +338,7 @@ export function CollaborationChapter() {
         </Reveal>
       </div>
 
-      <Bridge to="future" label="A constellation only grows brighter from here." />
+      <Bridge from="collaboration" to="future" label="A constellation only grows brighter from here." />
     </Section>
   );
 }
@@ -305,6 +349,7 @@ export function FutureChapter() {
   const words = ["The", "future", "is", "built", "one", "connected", "system", "at", "a", "time."];
   return (
     <Section id="future" eyebrow="07 · The Future" index="Return">
+      <FlowAccent chapter="future" />
       <ChapterMeta index="07" title="The Future" arc="Imagine · Participate · Return" />
 
       <div className="mx-auto max-w-4xl text-center">
