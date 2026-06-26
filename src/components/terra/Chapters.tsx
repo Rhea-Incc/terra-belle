@@ -148,7 +148,7 @@ export function PlanetChapter() {
         ))}
       </div>
 
-      <Bridge to="ecosystem" label="If the challenges are connected, the answer must be too." />
+      <Bridge from="planet" to="ecosystem" label="If the challenges are connected, the answer must be too." />
     </Section>
   );
 }
@@ -188,7 +188,7 @@ export function EcosystemChapter() {
         </Reveal>
       </div>
 
-      <Bridge to="circular" label="Each connection becomes a flow that never ends." />
+      <Bridge from="ecosystem" to="circular" label="Each connection becomes a flow that never ends." />
     </Section>
   );
 }
@@ -223,7 +223,7 @@ export function CircularChapter() {
         </Reveal>
       </div>
 
-      <Bridge to="impact" label="When loops turn, outcomes compound." />
+      <Bridge from="circular" to="impact" label="When loops turn, outcomes compound." />
     </Section>
   );
 }
@@ -293,7 +293,7 @@ export function ImpactChapter() {
         </div>
       </Reveal>
 
-      <Bridge to="collaboration" label="Numbers grow because people do." />
+      <Bridge from="impact" to="collaboration" label="Numbers grow because people do." />
     </Section>
   );
 }
@@ -333,7 +333,7 @@ export function CollaborationChapter() {
         </Reveal>
       </div>
 
-      <Bridge to="future" label="A constellation only grows brighter from here." />
+      <Bridge from="collaboration" to="future" label="A constellation only grows brighter from here." />
     </Section>
   );
 }
