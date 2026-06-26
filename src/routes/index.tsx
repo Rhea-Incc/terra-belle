@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SmoothScroll } from "@/components/terra/SmoothScroll";
 import { EnergyCursor } from "@/components/terra/Cursor";
+import { ParticleNetwork } from "@/components/terra/ParticleNetwork";
 import { TopNav, SideTimeline } from "@/components/terra/Nav";
 import { IntroLoader } from "@/components/terra/Loader";
+import { EnergyDivider } from "@/components/terra/Divider";
 import { Hero } from "@/components/terra/Hero";
 import {
   Mission,
@@ -39,19 +41,25 @@ function Index() {
     <>
       <IntroLoader />
       <SmoothScroll />
+      <ParticleNetwork />
       <EnergyCursor />
       <TopNav />
       <SideTimeline />
 
-      <main className="relative">
+      <main className="relative z-10">
         <Hero />
         <Mission />
+        <EnergyDivider />
         <Ecosystem />
+        <EnergyDivider flip />
         <Research />
+        <EnergyDivider />
         <Education />
         <Finance />
+        <EnergyDivider flip />
         <Impact />
         <Global />
+        <EnergyDivider />
         <Future />
       </main>
     </>
