@@ -67,19 +67,29 @@ export function Hero() {
           transition={{ duration: 0.9, delay: 1.7 }}
           className="mt-10 flex flex-wrap items-center justify-center gap-3"
         >
-          <a
-            href="#mission"
-            className="group relative overflow-hidden rounded-full bg-ink px-6 py-3 text-[13px] font-medium text-white transition-all hover:scale-[1.03] hover:shadow-[0_18px_50px_-12px_rgba(244,176,0,0.55)]"
-          >
-            <span className="relative z-10">Discover Terra Belle</span>
-            <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-gold via-green to-earth opacity-0 transition-all duration-500 group-hover:translate-x-0 group-hover:opacity-100" />
-          </a>
-          <a
-            href="#future"
-            className="rounded-full border border-black/10 bg-white/60 px-6 py-3 text-[13px] font-medium backdrop-blur transition hover:border-black/30"
-          >
-            Join the mission →
-          </a>
+          <Magnetic strength={0.4}>
+            <a
+              href="#mission"
+              data-magnetic
+              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-ink px-7 py-3.5 text-[13px] font-medium text-white transition-all duration-300 hover:shadow-[0_22px_60px_-15px_rgba(244,176,0,0.6)]"
+            >
+              <span className="relative z-10">Discover Terra Belle</span>
+              <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-1">→</span>
+              <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-gold via-green to-earth opacity-90 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0" />
+              <span className="absolute inset-0 rounded-full opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                    style={{ boxShadow: "0 0 0 1px rgba(244,176,0,0.4), 0 0 40px rgba(244,176,0,0.35)" }} />
+            </a>
+          </Magnetic>
+          <Magnetic strength={0.3}>
+            <a
+              href="#future"
+              data-magnetic
+              className="group rounded-full border border-black/10 bg-white/60 px-7 py-3.5 text-[13px] font-medium backdrop-blur-md transition-all duration-300 hover:border-black/30 hover:bg-white"
+            >
+              Join the mission <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
+            </a>
+          </Magnetic>
+
         </motion.div>
 
         <motion.div
