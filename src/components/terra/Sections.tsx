@@ -337,7 +337,11 @@ export function Future() {
     <Section id="future" eyebrow="12 · Future" index="The loop continues">
       <div className="mx-auto max-w-4xl text-center">
         <Reveal>
-          <Logo size={64} className="mx-auto" />
+          <div className="relative mx-auto h-20 w-20">
+            <span className="absolute inset-0 rounded-full border border-gold/40 animate-spin-slow" />
+            <span className="absolute inset-2 rounded-full border border-green/40" style={{ animation: "spin-slow 22s linear infinite reverse" }} />
+            <Logo size={64} className="absolute inset-2" />
+          </div>
         </Reveal>
         <WordReveal
           text="The work has no end. Every cycle returns stronger than the last."
@@ -349,22 +353,31 @@ export function Future() {
             of a regenerative civilization.
           </p>
           <div className="mt-12 flex flex-wrap items-center justify-center gap-3">
-            <a
-              href="#hero"
-              className="group relative overflow-hidden rounded-full bg-ink px-7 py-3.5 text-[13px] font-medium text-white transition-all hover:scale-[1.03]"
-            >
-              <span className="relative z-10">Join the mission</span>
-            </a>
-            <a
-              href="#research"
-              className="rounded-full border border-black/10 px-7 py-3.5 text-[13px] font-medium transition hover:border-black/30"
-            >
-              Read the field journal →
-            </a>
+            <Magnetic strength={0.4}>
+              <a
+                href="#hero"
+                data-magnetic
+                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-ink px-7 py-3.5 text-[13px] font-medium text-white transition-all duration-300 hover:shadow-[0_22px_60px_-15px_rgba(13,187,99,0.6)]"
+              >
+                <span className="relative z-10">Join the mission</span>
+                <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-1">→</span>
+                <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-green via-earth to-gold transition-transform duration-700 group-hover:translate-x-0" />
+              </a>
+            </Magnetic>
+            <Magnetic strength={0.3}>
+              <a
+                href="#research"
+                data-magnetic
+                className="group rounded-full border border-black/10 bg-white/60 px-7 py-3.5 text-[13px] font-medium backdrop-blur transition-all hover:border-black/30 hover:bg-white"
+              >
+                Read the field journal <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
+              </a>
+            </Magnetic>
           </div>
           <div className="mt-24 text-[11px] uppercase tracking-[0.32em] text-mist">
             Continue scrolling — the loop returns to its origin
           </div>
+
         </Reveal>
       </div>
     </Section>
