@@ -1,29 +1,59 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { SmoothScroll } from "@/components/terra/SmoothScroll";
+import { EnergyCursor } from "@/components/terra/Cursor";
+import { TopNav, SideTimeline } from "@/components/terra/Nav";
+import { IntroLoader } from "@/components/terra/Loader";
+import { Hero } from "@/components/terra/Hero";
+import {
+  Mission,
+  Ecosystem,
+  Research,
+  Education,
+  Finance,
+  Impact,
+  Global,
+  Future,
+} from "@/components/terra/Sections";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "Terra Belle Foundation — A Regenerative Operating System" },
+      {
+        name: "description",
+        content:
+          "An immersive ecosystem uniting technology, renewable energy, environmental stewardship, AI, finance and education into one continuous regenerative loop.",
+      },
+      { property: "og:title", content: "Terra Belle Foundation" },
+      {
+        property: "og:description",
+        content: "A regenerative operating system for the planet.",
+      },
     ],
   }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <>
+      <IntroLoader />
+      <SmoothScroll />
+      <EnergyCursor />
+      <TopNav />
+      <SideTimeline />
+
+      <main className="relative">
+        <Hero />
+        <Mission />
+        <Ecosystem />
+        <Research />
+        <Education />
+        <Finance />
+        <Impact />
+        <Global />
+        <Future />
+      </main>
+    </>
   );
 }
