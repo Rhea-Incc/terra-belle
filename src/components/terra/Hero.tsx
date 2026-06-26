@@ -6,9 +6,9 @@ import { Magnetic } from "./Interactive";
 
 
 export function Hero() {
-  const headline = ["A", "regenerative", "operating", "system", "for", "the", "planet."];
+  const headline = ["Building", "the", "systems", "that", "help", "people", "and", "the", "planet", "thrive", "together."];
   return (
-    <section id="hero" className="relative flex min-h-[100svh] w-full items-center justify-center overflow-hidden">
+    <section id="genesis" className="relative flex min-h-[100svh] w-full items-center justify-center overflow-hidden">
       <EnergyField />
 
       {/* Slow rotating emblem behind headline */}
@@ -34,7 +34,7 @@ export function Hero() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60" style={{ background: "var(--green)" }} />
             <span className="relative inline-flex h-2 w-2 rounded-full" style={{ background: "var(--green)" }} />
           </span>
-          Terra Belle Foundation
+          Chapter 01 · Genesis
         </motion.div>
 
         <h1 className="font-display text-[clamp(2.8rem,7vw,6.5rem)] leading-[0.98] tracking-[-0.02em] text-balance">
@@ -42,11 +42,11 @@ export function Hero() {
             <motion.span
               key={i}
               className="inline-block"
-              initial={{ opacity: 0, y: 30, filter: "blur(12px)" }}
+              initial={{ opacity: 0, y: 30, filter: "blur(14px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 1.1, delay: 0.5 + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
             >
-              {w === "regenerative" ? <em className="text-gradient-earth not-italic">{w}</em> : w}&nbsp;
+              {w === "thrive" || w === "together." ? <em className="text-gradient-earth not-italic">{w}</em> : w}&nbsp;
             </motion.span>
           ))}
         </h1>
@@ -57,8 +57,8 @@ export function Hero() {
           transition={{ duration: 1, delay: 1.4 }}
           className="mt-8 max-w-2xl text-[15px] leading-relaxed text-mist md:text-base"
         >
-          One continuous loop where technology, renewable energy, environmental stewardship,
-          intelligence, finance and education circulate as a single living ecosystem.
+          A regenerative platform where technology, nature, intelligence, finance and communities
+          operate as one continuous system — each strengthening the next.
         </motion.p>
 
         <motion.div
@@ -69,11 +69,11 @@ export function Hero() {
         >
           <Magnetic strength={0.4}>
             <a
-              href="#mission"
+              href="#planet"
               data-magnetic
               className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-ink px-7 py-3.5 text-[13px] font-medium text-white transition-all duration-300 hover:shadow-[0_22px_60px_-15px_rgba(244,176,0,0.6)]"
             >
-              <span className="relative z-10">Discover Terra Belle</span>
+              <span className="relative z-10">Begin the journey</span>
               <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-1">→</span>
               <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-gold via-green to-earth opacity-90 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0" />
               <span className="absolute inset-0 rounded-full opacity-0 transition-opacity duration-500 group-hover:opacity-100"
@@ -82,11 +82,11 @@ export function Hero() {
           </Magnetic>
           <Magnetic strength={0.3}>
             <a
-              href="#future"
+              href="#ecosystem"
               data-magnetic
               className="group rounded-full border border-black/10 bg-white/60 px-7 py-3.5 text-[13px] font-medium backdrop-blur-md transition-all duration-300 hover:border-black/30 hover:bg-white"
             >
-              Join the mission <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
+              Explore the ecosystem <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
             </a>
           </Magnetic>
 
@@ -99,7 +99,7 @@ export function Hero() {
           className="absolute bottom-10 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-[0.32em] text-mist"
         >
           <div className="flex flex-col items-center gap-2">
-            <span>Scroll · One Living Loop</span>
+            <span>Scroll · Awaken</span>
             <span className="h-8 w-px animate-pulse bg-mist/40" />
           </div>
         </motion.div>

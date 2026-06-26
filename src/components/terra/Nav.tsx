@@ -3,18 +3,12 @@ import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
 
 export const SECTIONS = [
-  { id: "hero", label: "Origin" },
-  { id: "mission", label: "Mission" },
-  { id: "technology", label: "Technology" },
-  { id: "energy", label: "Energy" },
-  { id: "environment", label: "Environment" },
-  { id: "ai", label: "Intelligence" },
-  { id: "circular", label: "Circular" },
-  { id: "research", label: "Research" },
-  { id: "education", label: "Education" },
-  { id: "finance", label: "Finance" },
-  { id: "impact", label: "Impact" },
-  { id: "global", label: "Global" },
+  { id: "genesis", label: "Genesis" },
+  { id: "planet", label: "Planet" },
+  { id: "ecosystem", label: "Ecosystem" },
+  { id: "circular", label: "Circular Economy" },
+  { id: "impact", label: "Impact Engine" },
+  { id: "collaboration", label: "Collaboration" },
   { id: "future", label: "Future" },
 ];
 
@@ -48,7 +42,7 @@ export function TopNav() {
           boxShadow: scrolled ? "0 18px 40px -20px rgba(17,17,17,0.18)" : "var(--shadow-soft)",
         }}
       >
-        <a href="#hero" data-magnetic className="group flex items-center gap-2">
+        <a href="#genesis" data-magnetic className="group flex items-center gap-2">
           <span className="relative">
             <Logo size={22} />
             <span className="absolute inset-0 rounded-full opacity-0 transition-opacity duration-500 group-hover:opacity-100"
@@ -58,20 +52,25 @@ export function TopNav() {
         </a>
         <span className="hidden h-4 w-px bg-black/10 sm:block" />
         <nav className="hidden items-center gap-5 text-[12.5px] text-mist sm:flex">
-          {["mission", "technology", "research", "impact"].map((s) => (
+          {[
+            { id: "planet", label: "Planet" },
+            { id: "ecosystem", label: "Ecosystem" },
+            { id: "circular", label: "Circular" },
+            { id: "impact", label: "Impact" },
+          ].map((s) => (
             <a
-              key={s}
-              href={`#${s}`}
+              key={s.id}
+              href={`#${s.id}`}
               data-magnetic
-              className="group relative capitalize transition hover:text-ink"
+              className="group relative transition hover:text-ink"
             >
-              {s}
+              {s.label}
               <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-gradient-to-r from-gold via-green to-earth transition-transform duration-500 group-hover:scale-x-100" />
             </a>
           ))}
         </nav>
         <a
-          href="#future"
+          href="#collaboration"
           data-magnetic
           className="group relative overflow-hidden rounded-full bg-ink px-3.5 py-1.5 text-[12px] font-medium text-white transition-all duration-300 hover:scale-[1.04]"
         >

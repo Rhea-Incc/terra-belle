@@ -7,15 +7,13 @@ import { IntroLoader } from "@/components/terra/Loader";
 import { EnergyDivider } from "@/components/terra/Divider";
 import { Hero } from "@/components/terra/Hero";
 import {
-  Mission,
-  Ecosystem,
-  Research,
-  Education,
-  Finance,
-  Impact,
-  Global,
-  Future,
-} from "@/components/terra/Sections";
+  PlanetChapter,
+  EcosystemChapter,
+  CircularChapter,
+  ImpactChapter,
+  CollaborationChapter,
+  FutureChapter,
+} from "@/components/terra/Chapters";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -24,7 +22,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "An immersive ecosystem uniting technology, renewable energy, environmental stewardship, AI, finance and education into one continuous regenerative loop.",
+          "A cinematic journey through Terra Belle's living ecosystem — technology, energy, finance, research, education and community operating as one continuous regenerative loop.",
       },
       { property: "og:title", content: "Terra Belle Foundation" },
       {
@@ -47,20 +45,32 @@ function Index() {
       <SideTimeline />
 
       <main className="relative z-10">
+        {/* 01 · Genesis */}
         <Hero />
-        <Mission />
         <EnergyDivider />
-        <Ecosystem />
+
+        {/* 02 · The Planet */}
+        <PlanetChapter />
         <EnergyDivider flip />
-        <Research />
+
+        {/* 03 · The Ecosystem */}
+        <EcosystemChapter />
         <EnergyDivider />
-        <Education />
-        <Finance />
+
+        {/* 04 · The Circular Economy */}
+        <CircularChapter />
         <EnergyDivider flip />
-        <Impact />
-        <Global />
+
+        {/* 05 · The Impact Engine */}
+        <ImpactChapter />
         <EnergyDivider />
-        <Future />
+
+        {/* 06 · The Collaboration Network */}
+        <CollaborationChapter />
+        <EnergyDivider flip />
+
+        {/* 07 · The Future (loops back to Genesis) */}
+        <FutureChapter />
       </main>
     </>
   );
