@@ -1,17 +1,21 @@
 "use client";
 import { motion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
+import { useRef, type ComponentType } from "react";
 import { Section, Reveal, WordReveal, ParallaxBlock } from "./Section";
 import { Logo } from "./Logo";
+import { Tilt, Magnetic } from "./Interactive";
+import { LeafIcon, SunIcon, WindIcon, AIIcon, CircleIcon, ChartIcon, NetworkIcon, WaterIcon } from "./Icons";
 
-const PILLARS = [
-  { id: "technology", color: "#0E46B8", title: "Technology", body: "Open infrastructure connecting renewable systems, intelligence and capital flows." },
-  { id: "energy", color: "#F4B000", title: "Renewable Energy", body: "Distributed solar, wind and storage networks feeding the loop." },
-  { id: "environment", color: "#0DBB63", title: "Environmental Stewardship", body: "Restoring soils, watersheds, and forests as living infrastructure." },
-  { id: "ai", color: "#6B8CF7", title: "AI & Intelligence", body: "Models that read ecosystems and route resources where they regenerate most." },
-  { id: "circular", color: "#0DBB63", title: "Circular Economy", body: "Materials, products and value designed to return — never to waste." },
-  { id: "finance", color: "#F4B000", title: "Regenerative Finance", body: "Capital instruments that compound ecological and human dividends." },
+type IconProps = { size?: number; color?: string };
+const PILLARS: { id: string; color: string; title: string; body: string; Icon: ComponentType<IconProps>; connects: string[] }[] = [
+  { id: "technology", color: "#0E46B8", title: "Technology", body: "Open infrastructure connecting renewable systems, intelligence and capital flows.", Icon: NetworkIcon, connects: ["AI", "Research", "Infrastructure", "Finance"] },
+  { id: "energy", color: "#F4B000", title: "Renewable Energy", body: "Distributed solar, wind and storage networks feeding the loop.", Icon: SunIcon, connects: ["Communities", "Environment", "Technology"] },
+  { id: "environment", color: "#0DBB63", title: "Environmental Stewardship", body: "Restoring soils, watersheds, and forests as living infrastructure.", Icon: LeafIcon, connects: ["Communities", "Climate", "Agriculture"] },
+  { id: "ai", color: "#6B8CF7", title: "AI & Intelligence", body: "Models that read ecosystems and route resources where they regenerate most.", Icon: AIIcon, connects: ["Research", "Energy", "Finance"] },
+  { id: "circular", color: "#0DBB63", title: "Circular Economy", body: "Materials, products and value designed to return — never to waste.", Icon: CircleIcon, connects: ["Industry", "Communities", "Environment"] },
+  { id: "finance", color: "#F4B000", title: "Regenerative Finance", body: "Capital instruments that compound ecological and human dividends.", Icon: ChartIcon, connects: ["Innovation", "Research", "Education"] },
 ];
+
 
 export function Mission() {
   return (
