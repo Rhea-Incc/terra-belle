@@ -7,6 +7,28 @@ import { EcosystemMap } from "./EcosystemMap";
 import { CircularFlow } from "./CircularFlow";
 import { CountUp } from "./CountUp";
 import { PartnerConstellation } from "./Constellation";
+import { FLOWS, useFlow } from "./FlowContext";
+
+/** Top-of-chapter indicator that lights up when a CircularFlow is energising this chapter. */
+function FlowAccent({ chapter }: { chapter: string }) {
+  const { active } = useFlow();
+  const flow = active ? FLOWS[active] : null;
+  const energised = !!flow && flow.chapters.includes(chapter);
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-x-6 top-0 h-px origin-left transition-all duration-700"
+      style={{
+        background: energised
+          ? `linear-gradient(90deg, transparent, ${flow!.color}, transparent)`
+          : "rgba(17,17,17,0.04)",
+        transform: energised ? "scaleX(1)" : "scaleX(0.4)",
+        opacity: energised ? 1 : 0.5,
+        boxShadow: energised ? `0 0 18px ${flow!.color}88` : "none",
+      }}
+    />
+  );
+}
 
 /* ---------- Shared atoms ---------- */
 
