@@ -112,6 +112,7 @@ export function PlanetChapter() {
 
   return (
     <Section id="planet" eyebrow="02 · The Planet" index="Understand">
+      <FlowAccent chapter="planet" />
       <ChapterMeta index="02" title="The Planet" arc="Understand" />
 
       <div className="grid grid-cols-1 gap-16 md:grid-cols-12">
@@ -158,6 +159,7 @@ export function PlanetChapter() {
 export function EcosystemChapter() {
   return (
     <Section id="ecosystem" eyebrow="03 · The Ecosystem" index="Discover">
+      <FlowAccent chapter="ecosystem" />
       <ChapterMeta index="03" title="The Ecosystem" arc="Discover" />
 
       <div className="grid grid-cols-1 gap-16 md:grid-cols-12">
@@ -198,6 +200,7 @@ export function EcosystemChapter() {
 export function CircularChapter() {
   return (
     <Section id="circular" eyebrow="04 · The Circular Economy" index="Discover">
+      <FlowAccent chapter="circular" />
       <ChapterMeta index="04" title="The Circular Economy" arc="Discover" />
 
       <div className="grid grid-cols-1 gap-16 md:grid-cols-12">
@@ -243,6 +246,7 @@ export function ImpactChapter() {
 
   return (
     <Section id="impact" eyebrow="05 · The Impact Engine" index="Connect">
+      <FlowAccent chapter="impact" />
       <ChapterMeta index="05" title="The Impact Engine" arc="Connect" />
 
       <div className="grid grid-cols-1 gap-16 md:grid-cols-12">
@@ -303,6 +307,7 @@ export function ImpactChapter() {
 export function CollaborationChapter() {
   return (
     <Section id="collaboration" eyebrow="06 · The Collaboration Network" index="Connect">
+      <FlowAccent chapter="collaboration" />
       <ChapterMeta index="06" title="The Collaboration Network" arc="Connect" />
 
       <div className="grid grid-cols-1 gap-16 md:grid-cols-12">
@@ -344,6 +349,7 @@ export function FutureChapter() {
   const words = ["The", "future", "is", "built", "one", "connected", "system", "at", "a", "time."];
   return (
     <Section id="future" eyebrow="07 · The Future" index="Return">
+      <FlowAccent chapter="future" />
       <ChapterMeta index="07" title="The Future" arc="Imagine · Participate · Return" />
 
       <div className="mx-auto max-w-4xl text-center">
