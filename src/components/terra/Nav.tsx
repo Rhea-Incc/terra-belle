@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+
 import { Logo } from "./Logo";
 
 export const SECTIONS = [
@@ -85,6 +86,8 @@ export function TopNav() {
 export function SideTimeline() {
   const [active, setActive] = useState("genesis");
   const [hover, setHover] = useState<string | null>(null);
+  const [focusIdx, setFocusIdx] = useState<number | null>(null);
+  const btnRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
   useEffect(() => {
     const io = new IntersectionObserver(
@@ -107,7 +110,49 @@ export function SideTimeline() {
 
   const jump = (id: string) => {
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    // Move focus into the destination section for screen-reader users.
+    const prevTab = el.getAttribute("tabindex");
+    el.setAttribute("tabindex", "-1");
+    el.focus({ preventScroll: true });
+    if (prevTab === null) {
+      // leave -1 so the section stays programmatically focusable; harmless.
+    }
+  };
+
+  const focusAt = (idx: number) => {
+    const clamped = (idx + SECTIONS.length) % SECTIONS.length;
+    btnRefs.current[clamped]?.focus();
+    setFocusIdx(clamped);
+  };
+
+  const onKeyDown = (e: KeyboardEvent<HTMLButtonElement>, idx: number) => {
+    switch (e.key) {
+      case "ArrowDown":
+      case "ArrowRight":
+        e.preventDefault();
+        focusAt(idx + 1);
+        break;
+      case "ArrowUp":
+      case "ArrowLeft":
+        e.preventDefault();
+        focusAt(idx - 1);
+        break;
+      case "Home":
+        e.preventDefault();
+        focusAt(0);
+        break;
+      case "End":
+        e.preventDefault();
+        focusAt(SECTIONS.length - 1);
+        break;
+      case "Enter":
+      case " ":
+        e.preventDefault();
+        jump(SECTIONS[idx].id);
+        break;
+    }
   };
 
   return (
@@ -115,7 +160,10 @@ export function SideTimeline() {
       className="fixed right-5 top-1/2 z-40 hidden -translate-y-1/2 md:block"
       aria-label="Chapter progress"
     >
-      <div className="relative flex flex-col items-end gap-9 py-6 pr-3">
+      <ol
+        className="relative flex flex-col items-end gap-9 py-6 pr-3 list-none m-0"
+        aria-label={`Chapter ${activeIdx + 1} of ${SECTIONS.length}: ${SECTIONS[activeIdx].label}`}
+      >
         {/* gear spine */}
         <span
           aria-hidden
@@ -137,69 +185,88 @@ export function SideTimeline() {
           const isActive = active === s.id;
           const isPast = i < activeIdx;
           const isHover = hover === s.id;
+          const isFocused = focusIdx === i;
+          // Roving tabindex: only the active (or currently focused) button is in the tab order.
+          const tabIndex = (focusIdx === null ? isActive : isFocused) ? 0 : -1;
           return (
-            <button
-              key={s.id}
-              type="button"
-              onClick={() => jump(s.id)}
-              onMouseEnter={() => setHover(s.id)}
-              onMouseLeave={() => setHover(null)}
-              onFocus={() => setHover(s.id)}
-              onBlur={() => setHover(null)}
-              className="group relative flex items-center gap-3 outline-none"
-              aria-label={`Jump to ${s.label}`}
-              aria-current={isActive ? "true" : undefined}
-            >
-              {/* floating label / preview */}
-              <span
-                className={`pointer-events-none whitespace-nowrap rounded-full border border-black/5 bg-white/85 px-3 py-1 text-[10px] uppercase tracking-[0.22em] backdrop-blur transition-all duration-300 ${
-                  isActive || isHover ? "translate-x-0 opacity-100" : "translate-x-2 opacity-0"
-                }`}
-                style={{ color: isActive ? "var(--ink)" : "var(--mist)", boxShadow: isActive ? "0 10px 24px -12px rgba(17,17,17,0.2)" : undefined }}
-              >
-                <span className="mr-2 font-semibold tabular-nums" style={{ color: "var(--ink)" }}>
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                {s.label}
-              </span>
-
-              {/* indent / gear tooth */}
-              <span
-                className="relative flex items-center justify-center rounded-full bg-white transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
-                style={{
-                  width: isActive ? 22 : 14,
-                  height: isActive ? 22 : 14,
-                  border: "1px solid rgba(17,17,17,0.18)",
-                  borderColor: isActive ? "var(--ink)" : isPast ? "rgba(13,187,99,0.55)" : "rgba(17,17,17,0.18)",
-                  boxShadow: isActive
-                    ? "0 0 0 4px rgba(255,255,255,0.95), 0 8px 24px -10px rgba(17,17,17,0.25)"
-                    : isHover
-                    ? "0 0 0 3px rgba(255,255,255,0.95)"
-                    : "0 0 0 3px rgba(255,255,255,0.95)",
-                  transform: isHover && !isActive ? "translateX(-3px) scale(1.1)" : isActive ? "translateX(-4px)" : "translateX(0)",
+            <li key={s.id} className="m-0 p-0">
+              <button
+                ref={(el) => {
+                  btnRefs.current[i] = el;
                 }}
+                type="button"
+                onClick={() => {
+                  setFocusIdx(i);
+                  jump(s.id);
+                }}
+                onKeyDown={(e) => onKeyDown(e, i)}
+                onMouseEnter={() => setHover(s.id)}
+                onMouseLeave={() => setHover(null)}
+                onFocus={() => {
+                  setHover(s.id);
+                  setFocusIdx(i);
+                }}
+                onBlur={() => setHover(null)}
+                tabIndex={tabIndex}
+                className="group relative flex items-center gap-3 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ink/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                aria-label={`Chapter ${i + 1} of ${SECTIONS.length}: ${s.label}${isActive ? ", current chapter" : isPast ? ", completed" : ""}`}
+                aria-current={isActive ? "step" : undefined}
+                aria-controls={s.id}
               >
-                {isActive ? (
-                  <>
-                    <span
-                      className="absolute inset-[-6px] rounded-full border"
-                      style={{ borderColor: "rgba(244,176,0,0.55)", borderStyle: "dashed", animation: "orbitRing 8s linear infinite" }}
-                    />
+                {/* floating label / preview */}
+                <span
+                  aria-hidden
+                  className={`pointer-events-none whitespace-nowrap rounded-full border border-black/5 bg-white/85 px-3 py-1 text-[10px] uppercase tracking-[0.22em] backdrop-blur transition-all duration-300 ${
+                    isActive || isHover || isFocused ? "translate-x-0 opacity-100" : "translate-x-2 opacity-0"
+                  }`}
+                  style={{ color: isActive ? "var(--ink)" : "var(--mist)", boxShadow: isActive ? "0 10px 24px -12px rgba(17,17,17,0.2)" : undefined }}
+                >
+                  <span className="mr-2 font-semibold tabular-nums" style={{ color: "var(--ink)" }}>
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  {s.label}
+                </span>
+
+                {/* indent / gear tooth */}
+                <span
+                  aria-hidden
+                  className="relative flex items-center justify-center rounded-full bg-white transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                  style={{
+                    width: isActive ? 22 : 14,
+                    height: isActive ? 22 : 14,
+                    border: "1px solid rgba(17,17,17,0.18)",
+                    borderColor: isActive ? "var(--ink)" : isPast ? "rgba(13,187,99,0.55)" : "rgba(17,17,17,0.18)",
+                    boxShadow: isActive
+                      ? "0 0 0 4px rgba(255,255,255,0.95), 0 8px 24px -10px rgba(17,17,17,0.25)"
+                      : "0 0 0 3px rgba(255,255,255,0.95)",
+                    transform: isHover && !isActive ? "translateX(-3px) scale(1.1)" : isActive ? "translateX(-4px)" : "translateX(0)",
+                  }}
+                >
+                  {isActive ? (
+                    <>
+                      <span
+                        className="absolute inset-[-6px] rounded-full border motion-reduce:animate-none"
+                        style={{ borderColor: "rgba(244,176,0,0.55)", borderStyle: "dashed", animation: "orbitRing 8s linear infinite" }}
+                      />
+                      <span
+                        className="h-1.5 w-1.5 rounded-full"
+                        style={{ background: "var(--ink)", boxShadow: "0 0 8px var(--gold)" }}
+                      />
+                    </>
+                  ) : isPast ? (
                     <span
                       className="h-1.5 w-1.5 rounded-full"
-                      style={{ background: "var(--ink)", boxShadow: "0 0 8px var(--gold)" }}
+                      style={{ background: "linear-gradient(135deg, var(--gold), var(--green))" }}
                     />
-                  </>
-                ) : isPast ? (
-                  <span
-                    className="h-1.5 w-1.5 rounded-full"
-                    style={{ background: "linear-gradient(135deg, var(--gold), var(--green))" }}
-                  />
-                ) : null}
-              </span>
-            </button>
+                  ) : null}
+                </span>
+              </button>
+            </li>
           );
         })}
+      </ol>
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {`Chapter ${activeIdx + 1} of ${SECTIONS.length}: ${SECTIONS[activeIdx].label}`}
       </div>
       <style>{`
         @keyframes orbitRing {
@@ -207,7 +274,11 @@ export function SideTimeline() {
           50%  { opacity: 1; }
           100% { transform: rotate(360deg); opacity: 0.7; }
         }
+        @media (prefers-reduced-motion: reduce) {
+          @keyframes orbitRing { from, to { transform: none; opacity: 0.8; } }
+        }
       `}</style>
     </nav>
   );
 }
+
