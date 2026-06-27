@@ -1,9 +1,9 @@
-import logo from "@/assets/terra-belle-logo.png.asset.json";
+import logoUrl from "@/assets/terra-belle-logo.png";
 
 export function Logo({ className = "", size = 28 }: { className?: string; size?: number }) {
   return (
     <img
-      src={logo.url}
+      src={logoUrl}
       alt="Terra Belle Foundation"
       width={size}
       height={size}
