@@ -3,6 +3,7 @@ import { SmoothScroll } from "@/components/terra/SmoothScroll";
 import { EnergyCursor } from "@/components/terra/Cursor";
 import { ParticleNetwork } from "@/components/terra/ParticleNetwork";
 import { TopNav, SideTimeline } from "@/components/terra/Nav";
+import { MobileChapterRail } from "@/components/terra/MobileChapterRail";
 import { IntroLoader } from "@/components/terra/Loader";
 import { EnergyDivider } from "@/components/terra/Divider";
 import { Hero } from "@/components/terra/Hero";
@@ -45,6 +46,7 @@ function Index() {
       <FlowProvider>
         <TopNav />
         <SideTimeline />
+        <MobileChapterRail />
 
         <main className="relative z-10">
           {/* 01 · Genesis */}
