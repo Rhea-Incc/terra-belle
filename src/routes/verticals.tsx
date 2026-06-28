@@ -74,7 +74,7 @@ const VERTICALS = [
     title: "Green Construction & Carbon Mortar",
     eyebrow: "Built Environment",
     color: "#0DBB63",
-    Icon: GraphIcon,
+    Icon: ChartIcon,
     summary:
       "Low-clinker cement, carbon-cured mortars and bio-aggregate composites that sequester CO₂ inside the buildings we already need — turning the construction sector from the world's largest emitter into a carbon sink.",
     points: [
