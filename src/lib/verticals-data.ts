@@ -32,7 +32,7 @@ export type Vertical = {
   color: string;
   Icon: typeof LeafIcon;
   summary: string;
-  points: string[];
+  points?: string[];
   hero: string;
   mission: string;
   vision: string;
