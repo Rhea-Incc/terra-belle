@@ -15,6 +15,7 @@ import { Route as ImpactRouteImport } from './routes/impact'
 import { Route as EcosystemRouteImport } from './routes/ecosystem'
 import { Route as CircularRouteImport } from './routes/circular'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as VerticalsSlugRouteImport } from './routes/verticals.$slug'
 
 const VerticalsRoute = VerticalsRouteImport.update({
   id: '/verticals',
@@ -46,6 +47,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VerticalsSlugRoute = VerticalsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => VerticalsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -53,7 +59,8 @@ export interface FileRoutesByFullPath {
   '/ecosystem': typeof EcosystemRoute
   '/impact': typeof ImpactRoute
   '/planet': typeof PlanetRoute
-  '/verticals': typeof VerticalsRoute
+  '/verticals': typeof VerticalsRouteWithChildren
+  '/verticals/$slug': typeof VerticalsSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -61,7 +68,8 @@ export interface FileRoutesByTo {
   '/ecosystem': typeof EcosystemRoute
   '/impact': typeof ImpactRoute
   '/planet': typeof PlanetRoute
-  '/verticals': typeof VerticalsRoute
+  '/verticals': typeof VerticalsRouteWithChildren
+  '/verticals/$slug': typeof VerticalsSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -70,7 +78,8 @@ export interface FileRoutesById {
   '/ecosystem': typeof EcosystemRoute
   '/impact': typeof ImpactRoute
   '/planet': typeof PlanetRoute
-  '/verticals': typeof VerticalsRoute
+  '/verticals': typeof VerticalsRouteWithChildren
+  '/verticals/$slug': typeof VerticalsSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -81,8 +90,16 @@ export interface FileRouteTypes {
     | '/impact'
     | '/planet'
     | '/verticals'
+    | '/verticals/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/circular' | '/ecosystem' | '/impact' | '/planet' | '/verticals'
+  to:
+    | '/'
+    | '/circular'
+    | '/ecosystem'
+    | '/impact'
+    | '/planet'
+    | '/verticals'
+    | '/verticals/$slug'
   id:
     | '__root__'
     | '/'
@@ -91,6 +108,7 @@ export interface FileRouteTypes {
     | '/impact'
     | '/planet'
     | '/verticals'
+    | '/verticals/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -99,7 +117,7 @@ export interface RootRouteChildren {
   EcosystemRoute: typeof EcosystemRoute
   ImpactRoute: typeof ImpactRoute
   PlanetRoute: typeof PlanetRoute
-  VerticalsRoute: typeof VerticalsRoute
+  VerticalsRoute: typeof VerticalsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -146,8 +164,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/verticals/$slug': {
+      id: '/verticals/$slug'
+      path: '/$slug'
+      fullPath: '/verticals/$slug'
+      preLoaderRoute: typeof VerticalsSlugRouteImport
+      parentRoute: typeof VerticalsRoute
+    }
   }
 }
+
+interface VerticalsRouteChildren {
+  VerticalsSlugRoute: typeof VerticalsSlugRoute
+}
+
+const VerticalsRouteChildren: VerticalsRouteChildren = {
+  VerticalsSlugRoute: VerticalsSlugRoute,
+}
+
+const VerticalsRouteWithChildren = VerticalsRoute._addFileChildren(
+  VerticalsRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -155,18 +192,8 @@ const rootRouteChildren: RootRouteChildren = {
   EcosystemRoute: EcosystemRoute,
   ImpactRoute: ImpactRoute,
   PlanetRoute: PlanetRoute,
-  VerticalsRoute: VerticalsRoute,
+  VerticalsRoute: VerticalsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
