@@ -15,6 +15,7 @@ import { Route as ImpactRouteImport } from './routes/impact'
 import { Route as EcosystemRouteImport } from './routes/ecosystem'
 import { Route as CircularRouteImport } from './routes/circular'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as VerticalsIndexRouteImport } from './routes/verticals.index'
 import { Route as VerticalsSlugRouteImport } from './routes/verticals.$slug'
 
 const VerticalsRoute = VerticalsRouteImport.update({
@@ -47,6 +48,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VerticalsIndexRoute = VerticalsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => VerticalsRoute,
+} as any)
 const VerticalsSlugRoute = VerticalsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -61,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/planet': typeof PlanetRoute
   '/verticals': typeof VerticalsRouteWithChildren
   '/verticals/$slug': typeof VerticalsSlugRoute
+  '/verticals/': typeof VerticalsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -68,8 +75,8 @@ export interface FileRoutesByTo {
   '/ecosystem': typeof EcosystemRoute
   '/impact': typeof ImpactRoute
   '/planet': typeof PlanetRoute
-  '/verticals': typeof VerticalsRouteWithChildren
   '/verticals/$slug': typeof VerticalsSlugRoute
+  '/verticals': typeof VerticalsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +87,7 @@ export interface FileRoutesById {
   '/planet': typeof PlanetRoute
   '/verticals': typeof VerticalsRouteWithChildren
   '/verticals/$slug': typeof VerticalsSlugRoute
+  '/verticals/': typeof VerticalsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +99,7 @@ export interface FileRouteTypes {
     | '/planet'
     | '/verticals'
     | '/verticals/$slug'
+    | '/verticals/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -98,8 +107,8 @@ export interface FileRouteTypes {
     | '/ecosystem'
     | '/impact'
     | '/planet'
-    | '/verticals'
     | '/verticals/$slug'
+    | '/verticals'
   id:
     | '__root__'
     | '/'
@@ -109,6 +118,7 @@ export interface FileRouteTypes {
     | '/planet'
     | '/verticals'
     | '/verticals/$slug'
+    | '/verticals/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -164,6 +174,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/verticals/': {
+      id: '/verticals/'
+      path: '/'
+      fullPath: '/verticals/'
+      preLoaderRoute: typeof VerticalsIndexRouteImport
+      parentRoute: typeof VerticalsRoute
+    }
     '/verticals/$slug': {
       id: '/verticals/$slug'
       path: '/$slug'
@@ -176,10 +193,12 @@ declare module '@tanstack/react-router' {
 
 interface VerticalsRouteChildren {
   VerticalsSlugRoute: typeof VerticalsSlugRoute
+  VerticalsIndexRoute: typeof VerticalsIndexRoute
 }
 
 const VerticalsRouteChildren: VerticalsRouteChildren = {
   VerticalsSlugRoute: VerticalsSlugRoute,
+  VerticalsIndexRoute: VerticalsIndexRoute,
 }
 
 const VerticalsRouteWithChildren = VerticalsRoute._addFileChildren(
