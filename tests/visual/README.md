@@ -37,3 +37,18 @@ regression is easy to inspect.
 Only after a deliberate visual change to the rail / pill / sheet. Review
 the diff images, confirm the new look is intended, then run with
 `--update` and commit the new baselines.
+
+## Vertical pages
+
+`verticals.py` covers `/verticals` (grid), `/verticals/web3-mrv` (hero),
+the `JourneyLoop` in default / focused-next / focused-end states, and
+the `PartnerApplyDialog` in empty / validation-error / success / project
+scopes. It freezes CSS animations and forces `prefers-reduced-motion: reduce`
+so screenshots are stable; canvas layers are hidden during capture. Runs
+with the same interface:
+
+```bash
+python tests/visual/verticals.py            # compare against baselines
+python tests/visual/verticals.py --update   # rewrite baselines
+```
+

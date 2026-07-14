@@ -1,10 +1,14 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { Section, Reveal } from "@/components/terra/Section";
 import { Tilt } from "@/components/terra/Interactive";
 import { EnergyDivider } from "@/components/terra/Divider";
 import { JourneyLoop } from "@/components/terra/JourneyLoop";
+import {
+  PartnerApplyDialog,
+  type PartnerApplyScope,
+} from "@/components/terra/PartnerApplyDialog";
 import { getVertical } from "@/lib/verticals-data";
 
 export const Route = createFileRoute("/verticals/$slug")({
@@ -54,6 +58,9 @@ function VerticalDetail() {
   const v = getVertical(slug)!;
   const Icon = v.Icon;
   const rootRef = useRef<HTMLDivElement>(null);
+  const [applyScope, setApplyScope] = useState<PartnerApplyScope | null>(null);
+  const openApply = (scope: PartnerApplyScope) => setApplyScope(scope);
+  const closeApply = () => setApplyScope(null);
 
   // On slug change, scroll the detail into view so the visitor sees the newly
   // selected vertical — while the grid above stays intact.
@@ -239,16 +246,19 @@ function VerticalDetail() {
 
                   {/* Project-level CTA */}
                   <div className="mt-6">
-                    <a
-                      href={`mailto:partners@terrabelle.org?subject=${encodeURIComponent(
-                        `Project partnership — ${p.name}`,
-                      )}`}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        openApply({ kind: "project", vertical: v, project: p })
+                      }
                       data-magnetic
+                      aria-haspopup="dialog"
+                      aria-controls="partner-apply-dialog"
                       className="group inline-flex items-center gap-1.5 text-[12px] font-medium text-ink/80 transition hover:text-ink"
                     >
                       Partner on this project
                       <span className="transition-transform group-hover:translate-x-0.5">→</span>
-                    </a>
+                    </button>
                   </div>
                 </article>
               </Tilt>
@@ -293,17 +303,18 @@ function VerticalDetail() {
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <a
-                href={`mailto:partners@terrabelle.org?subject=${encodeURIComponent(
-                  `Vertical partnership — ${v.title}`,
-                )}`}
+              <button
+                type="button"
+                onClick={() => openApply({ kind: "vertical", vertical: v })}
                 data-magnetic
+                aria-haspopup="dialog"
+                aria-controls="partner-apply-dialog"
                 className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-ink px-6 py-3 text-[12.5px] font-medium text-white transition-all duration-300 hover:shadow-[0_22px_60px_-15px_rgba(244,176,0,0.6)]"
               >
                 <span className="relative z-10">Partner at vertical level</span>
                 <span className="relative z-10 transition-transform group-hover:translate-x-1">→</span>
                 <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-gold via-green to-earth transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0" />
-              </a>
+              </button>
               <a
                 href={`#projects-${v.slug}`}
                 data-magnetic
@@ -320,6 +331,12 @@ function VerticalDetail() {
       <Section id={`journey-${v.slug}`} eyebrow="Continue the loop">
         <JourneyLoop active={v} />
       </Section>
+
+      <PartnerApplyDialog
+        open={applyScope !== null}
+        onOpenChange={(o) => (o ? null : closeApply())}
+        scope={applyScope}
+      />
     </div>
   );
 }
