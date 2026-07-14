@@ -137,8 +137,8 @@ async def verticals_scenes(browser):
     compare("journey_loop_default", await cap(loop, "journey_loop_default"))
 
     # JourneyLoop after ArrowRight (roving focus moves to next node)
-    active = loop.locator('a[data-loop-node][aria-current="step"]')
-    await active.focus()
+    first_node = loop.locator('a[data-loop-node]').first
+    await first_node.focus()
     await page.keyboard.press("ArrowRight")
     await page.wait_for_timeout(150)
     compare("journey_loop_focus_next", await cap(loop, "journey_loop_focus_next"))
