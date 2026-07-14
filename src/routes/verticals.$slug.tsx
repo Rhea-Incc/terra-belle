@@ -58,6 +58,9 @@ function VerticalDetail() {
   const v = getVertical(slug)!;
   const Icon = v.Icon;
   const rootRef = useRef<HTMLDivElement>(null);
+  const [applyScope, setApplyScope] = useState<PartnerApplyScope | null>(null);
+  const openApply = (scope: PartnerApplyScope) => setApplyScope(scope);
+  const closeApply = () => setApplyScope(null);
 
   // On slug change, scroll the detail into view so the visitor sees the newly
   // selected vertical — while the grid above stays intact.
