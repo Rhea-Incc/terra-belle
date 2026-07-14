@@ -183,7 +183,7 @@ async def verticals_scenes(browser):
             await cap(dialog, "partner_dialog_vertical_success"))
 
     # Close and open a project-level flow
-    await dialog.get_by_role("button", name="Close").click()
+    await dialog.get_by_role("button", name="Close", exact=True).click()
     await dialog.wait_for(state="hidden")
 
     project_btn = page.get_by_role("button", name="Partner on this project").first
