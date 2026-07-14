@@ -331,6 +331,12 @@ function VerticalDetail() {
       <Section id={`journey-${v.slug}`} eyebrow="Continue the loop">
         <JourneyLoop active={v} />
       </Section>
+
+      <PartnerApplyDialog
+        open={applyScope !== null}
+        onOpenChange={(o) => (o ? null : closeApply())}
+        scope={applyScope}
+      />
     </div>
   );
 }
