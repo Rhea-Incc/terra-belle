@@ -44,15 +44,18 @@ const schema = z.object({
     .max(120, "Keep it under 120 characters")
     .optional()
     .or(z.literal("")),
-  contribution: z.enum(["funding", "research", "operations", "community", "technology", "other"], {
-    message: "Pick how you'd contribute",
-  }),
+  contribution: z
+    .string()
+    .refine(
+      (v) => ["funding", "research", "operations", "community", "technology", "other"].includes(v),
+      "Pick how you'd contribute",
+    ),
   message: z
     .string()
     .trim()
     .min(20, "Tell us a little more (20+ chars)")
     .max(1200, "Please keep it under 1200 characters"),
-  consent: z.literal(true, { message: "Please agree to be contacted" }),
+  consent: z.boolean().refine((v) => v === true, "Please agree to be contacted"),
 });
 
 type FormValues = {
