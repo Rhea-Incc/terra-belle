@@ -8,6 +8,7 @@ import { CircularFlow } from "./CircularFlow";
 import { CountUp } from "./CountUp";
 import { PartnerConstellation } from "./Constellation";
 import { FLOWS, useFlow } from "./FlowContext";
+import { OrganicBackdrop } from "./OrganicBackdrop";
 
 /** Top-of-chapter indicator that lights up when a CircularFlow is energising this chapter. */
 function FlowAccent({ chapter }: { chapter: string }) {
@@ -186,7 +187,15 @@ export function EcosystemChapter() {
 
       <div className="mt-20">
         <Reveal delay={0.1}>
-          <EcosystemMap />
+          <OrganicBackdrop variant="green">
+            <div className="mb-10 text-center">
+              <div className="text-[11px] uppercase tracking-[0.28em] text-green">Orbital System</div>
+              <div className="mt-2 font-display text-[clamp(1.4rem,2.6vw,2rem)] leading-tight tracking-tight text-white">
+                Ten domains, one gravity.
+              </div>
+            </div>
+            <EcosystemMap />
+          </OrganicBackdrop>
         </Reveal>
       </div>
 
@@ -222,7 +231,9 @@ export function CircularChapter() {
 
       <div className="mt-20">
         <Reveal delay={0.1}>
-          <CircularFlow />
+          <OrganicBackdrop variant="deep">
+            <CircularFlow />
+          </OrganicBackdrop>
         </Reveal>
       </div>
 
