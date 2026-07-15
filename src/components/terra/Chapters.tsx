@@ -187,7 +187,7 @@ export function EcosystemChapter() {
 
       <div className="mt-20">
         <Reveal delay={0.1}>
-          <OrganicBackdrop variant="green">
+          <OrganicBackdrop variant="ecosystem">
             <div className="mb-10 text-center">
               <div className="text-[11px] uppercase tracking-[0.28em] text-green">Orbital System</div>
               <div className="mt-2 font-display text-[clamp(1.4rem,2.6vw,2rem)] leading-tight tracking-tight text-white">
