@@ -166,23 +166,23 @@ export function SideTimeline() {
       aria-label="Chapter progress"
     >
       <ol
-        className="relative flex flex-col items-end gap-9 py-6 pr-3 list-none m-0"
+        className="relative flex flex-col items-end gap-8 py-6 pr-3 list-none m-0"
         aria-label={`Chapter ${activeIdx + 1} of ${SECTIONS.length}: ${SECTIONS[activeIdx].label}`}
       >
-        {/* gear spine */}
+        {/* faint vertical thread connecting the ticks */}
         <span
           aria-hidden
-          className="absolute right-[10px] top-3 bottom-3 w-[2px] rounded-full"
-          style={{ background: "linear-gradient(to bottom, transparent, rgba(17,17,17,0.12) 15%, rgba(17,17,17,0.12) 85%, transparent)" }}
+          className="absolute right-[6px] top-3 bottom-3 w-px"
+          style={{ background: "linear-gradient(to bottom, transparent, rgba(17,17,17,0.14) 12%, rgba(17,17,17,0.14) 88%, transparent)" }}
         />
-        {/* progress fill */}
+        {/* progress thread */}
         <span
           aria-hidden
-          className="absolute right-[10px] top-3 w-[2px] rounded-full transition-[height] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+          className="absolute right-[6px] top-3 w-px transition-[height] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
           style={{
-            height: `calc(${progress}% * 0.94 + 0px)`,
-            background: "linear-gradient(to bottom, #F4B000, #0DBB63, #0E46B8, #6B8CF7)",
-            boxShadow: "0 0 12px rgba(244,176,0,0.35)",
+            height: `calc(${progress}% * 0.94)`,
+            background: "linear-gradient(to bottom, var(--gold), var(--green), var(--earth-blue), var(--sky-blue))",
+            boxShadow: "0 0 10px rgba(244,176,0,0.35)",
           }}
         />
 
@@ -191,8 +191,11 @@ export function SideTimeline() {
           const isPast = i < activeIdx;
           const isHover = hover === s.id;
           const isFocused = focusIdx === i;
-          // Roving tabindex: only the active (or currently focused) button is in the tab order.
           const tabIndex = (focusIdx === null ? isActive : isFocused) ? 0 : -1;
+
+          // tick line lengths (px) — active is longest and gold-tipped
+          const tickWidth = isActive ? 28 : isHover ? 20 : isPast ? 14 : 10;
+
           return (
             <li key={s.id} className="m-0 p-0">
               <button
@@ -213,58 +216,44 @@ export function SideTimeline() {
                 }}
                 onBlur={() => setHover(null)}
                 tabIndex={tabIndex}
-                className="group relative flex items-center gap-3 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ink/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                className="group relative flex items-center gap-3 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ink/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 aria-label={`Chapter ${i + 1} of ${SECTIONS.length}: ${s.label}${isActive ? ", current chapter" : isPast ? ", completed" : ""}`}
                 aria-current={isActive ? "step" : undefined}
                 aria-controls={s.id}
               >
-                {/* floating label / preview */}
+                {/* floating label — italic display serif to echo the inspo */}
                 <span
                   aria-hidden
-                  className={`pointer-events-none whitespace-nowrap rounded-full border border-black/5 bg-white/85 px-3 py-1 text-[10px] uppercase tracking-[0.22em] backdrop-blur transition-all duration-300 ${
+                  className={`pointer-events-none whitespace-nowrap font-display italic text-[13px] tracking-[0.14em] transition-all duration-300 ${
                     isActive || isHover || isFocused ? "translate-x-0 opacity-100" : "translate-x-2 opacity-0"
                   }`}
-                  style={{ color: isActive ? "var(--ink)" : "var(--mist)", boxShadow: isActive ? "0 10px 24px -12px rgba(17,17,17,0.2)" : undefined }}
-                >
-                  <span className="mr-2 font-semibold tabular-nums" style={{ color: "var(--ink)" }}>
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  {s.label}
-                </span>
-
-                {/* indent / gear tooth */}
-                <span
-                  aria-hidden
-                  className="relative flex items-center justify-center rounded-full bg-white transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
                   style={{
-                    width: isActive ? 22 : 14,
-                    height: isActive ? 22 : 14,
-                    border: "1px solid rgba(17,17,17,0.18)",
-                    borderColor: isActive ? "var(--ink)" : isPast ? "rgba(13,187,99,0.55)" : "rgba(17,17,17,0.18)",
-                    boxShadow: isActive
-                      ? "0 0 0 4px rgba(255,255,255,0.95), 0 8px 24px -10px rgba(17,17,17,0.25)"
-                      : "0 0 0 3px rgba(255,255,255,0.95)",
-                    transform: isHover && !isActive ? "translateX(-3px) scale(1.1)" : isActive ? "translateX(-4px)" : "translateX(0)",
+                    color: isActive ? "var(--ink)" : "var(--mist)",
+                    textShadow: isActive ? "0 1px 12px rgba(244,176,0,0.35)" : undefined,
                   }}
                 >
-                  {isActive ? (
-                    <>
-                      <span
-                        className="absolute inset-[-6px] rounded-full border motion-reduce:animate-none"
-                        style={{ borderColor: "rgba(244,176,0,0.55)", borderStyle: "dashed", animation: "orbitRing 8s linear infinite" }}
-                      />
-                      <span
-                        className="h-1.5 w-1.5 rounded-full"
-                        style={{ background: "var(--ink)", boxShadow: "0 0 8px var(--gold)" }}
-                      />
-                    </>
-                  ) : isPast ? (
-                    <span
-                      className="h-1.5 w-1.5 rounded-full"
-                      style={{ background: "linear-gradient(135deg, var(--gold), var(--green))" }}
-                    />
-                  ) : null}
+                  {s.label.toUpperCase()}
                 </span>
+
+                {/* horizontal tick line — replaces the dot */}
+                <span
+                  aria-hidden
+                  className="relative block transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                  style={{
+                    height: "2px",
+                    width: tickWidth,
+                    borderRadius: "2px",
+                    background: isActive
+                      ? "linear-gradient(to right, var(--gold), var(--ink))"
+                      : isPast
+                        ? "linear-gradient(to right, rgba(13,187,99,0.7), rgba(14,70,184,0.6))"
+                        : "rgba(17,17,17,0.28)",
+                    boxShadow: isActive
+                      ? "0 0 14px rgba(244,176,0,0.55), 0 0 2px rgba(17,17,17,0.4)"
+                      : undefined,
+                    transformOrigin: "right center",
+                  }}
+                />
               </button>
             </li>
           );
@@ -273,17 +262,8 @@ export function SideTimeline() {
       <div className="sr-only" aria-live="polite" aria-atomic="true">
         {`Chapter ${activeIdx + 1} of ${SECTIONS.length}: ${SECTIONS[activeIdx].label}`}
       </div>
-      <style>{`
-        @keyframes orbitRing {
-          0%   { transform: rotate(0deg); opacity: 0.7; }
-          50%  { opacity: 1; }
-          100% { transform: rotate(360deg); opacity: 0.7; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          @keyframes orbitRing { from, to { transform: none; opacity: 0.8; } }
-        }
-      `}</style>
     </nav>
   );
 }
+
 
