@@ -244,10 +244,10 @@ export function EcosystemMap() {
         })}
       </div>
 
-      <div className="mt-8 min-h-[3rem] text-center text-[13px] leading-relaxed text-mist">
+      <div className="mt-8 min-h-[3rem] text-center text-[13px] leading-relaxed text-white/60">
         {activeNode && activeNode.orbit !== 0 ? (
           <span>
-            <strong className="text-ink">{activeNode.label}</strong> · connects to{" "}
+            <strong className="text-white">{activeNode.label}</strong> · connects to{" "}
             {activeNode.connects.map((c, i) => (
               <span key={c}>
                 <span style={{ color: byId[c].color }}>{byId[c].label}</span>
@@ -256,7 +256,7 @@ export function EcosystemMap() {
             ))}
           </span>
         ) : activeNode?.orbit === 0 ? (
-          <span><strong className="text-ink">Terra Belle</strong> · the gravitational core every orbit returns to.</span>
+          <span><strong className="text-white">Terra Belle</strong> · the gravitational core every orbit returns to.</span>
         ) : (
           <span className="opacity-70">Hover any orbiting body to trace its relationships through the ecosystem.</span>
         )}
