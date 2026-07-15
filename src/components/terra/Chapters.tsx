@@ -231,7 +231,7 @@ export function CircularChapter() {
 
       <div className="mt-20">
         <Reveal delay={0.1}>
-          <OrganicBackdrop variant="deep">
+          <OrganicBackdrop variant="circular">
             <CircularFlow />
           </OrganicBackdrop>
         </Reveal>
