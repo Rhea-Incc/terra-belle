@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "sdk_version": "0.22.2",
+  "path": "/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "terra-belle-mcp",
+      "version": "0.1.0",
+      "title": "Terra Belle Foundation MCP"
+    },
+    "tools": [
+      {
+        "name": "about_terra_belle",
+        "title": "About Terra Belle Foundation",
+        "description": "Overview of Terra Belle Foundation — its mission, cinematic chapters, and the top-level pages of the digital ecosystem.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_verticals",
+        "title": "List Terra Belle verticals",
+        "description": "List Terra Belle Foundation's regenerative verticals (MRV & reforestation, hydro-aviation R&D, distributed green energy, direct air removal, green construction, vertical gardens, WildTracks conservation tourism, and more). Optionally filter by category.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "category": {
+              "description": "Filter by category. Omit or use 'All' for every vertical.",
+              "type": "string",
+              "enum": [
+                "All",
+                "Nature",
+                "Energy",
+                "Atmosphere",
+                "Aerospace",
+                "Materials",
+                "Community"
+              ]
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_vertical",
+        "title": "Get vertical details",
+        "description": "Return the full public detail for one Terra Belle vertical: mission, vision, goals, drives, projects, phased cycle, projected impact metrics, and aligned partner institutions.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Vertical slug, e.g. 'web3-mrv', 'hydro-aviation', 'wildtracks'."
+            }
+          },
+          "required": [
+            "slug"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
