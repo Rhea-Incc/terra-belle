@@ -53,9 +53,10 @@ const PRESETS: Record<Variant, Tokens> = {
 };
 
 // Radial mask so blobs feather to transparent on every edge — this is the
-// blend into the surrounding section (white or dark).
+// blend into the surrounding section (white or dark). Kept generous so no
+// hard elliptical boundary is ever visible against the page.
 const FEATHER_MASK =
-  "radial-gradient(ellipse 85% 80% at 50% 50%, #000 55%, transparent 100%)";
+  "radial-gradient(ellipse 95% 95% at 50% 50%, #000 25%, rgba(0,0,0,0.6) 55%, transparent 100%)";
 
 export function OrganicBackdrop({
   children,
