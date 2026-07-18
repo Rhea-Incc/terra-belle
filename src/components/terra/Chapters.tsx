@@ -190,7 +190,7 @@ export function EcosystemChapter() {
           <OrganicBackdrop variant="ecosystem">
             <div className="mb-10 text-center">
               <div className="text-[11px] uppercase tracking-[0.28em] text-green">Orbital System</div>
-              <div className="mt-2 font-display text-[clamp(1.4rem,2.6vw,2rem)] leading-tight tracking-tight text-white">
+              <div className="mt-2 font-display text-[clamp(1.4rem,2.6vw,2rem)] leading-tight tracking-tight text-ink">
                 Ten domains, one gravity.
               </div>
             </div>

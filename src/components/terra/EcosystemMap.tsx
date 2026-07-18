@@ -105,11 +105,11 @@ export function EcosystemMap() {
       const t = reduce ? 0 : (now - start) / 1000;
       ctx.clearRect(0, 0, w, h);
 
-      // faint concentric orbit rings
+      // faint concentric orbit rings (dark on light bg)
       for (let o = 1; o <= 3; o++) {
         ctx.beginPath();
         ctx.arc(cx, cy, orbitRadii[o], 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(255,255,255,${0.08 + (3 - o) * 0.025})`;
+        ctx.strokeStyle = `rgba(17,17,17,${0.10 + (3 - o) * 0.03})`;
         ctx.setLineDash([2, 6]);
         ctx.lineWidth = 1;
         ctx.stroke();
@@ -142,8 +142,8 @@ export function EcosystemMap() {
           grad.addColorStop(0, n.color);
           grad.addColorStop(1, byId[cid].color);
           ctx.strokeStyle = grad;
-          ctx.globalAlpha = highlighted ? 0.7 : dimmed ? 0.04 : 0.12;
-          ctx.lineWidth = highlighted ? 1.6 : 0.7;
+          ctx.globalAlpha = highlighted ? 0.85 : dimmed ? 0.08 : 0.28;
+          ctx.lineWidth = highlighted ? 1.8 : 0.9;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(b.x, b.y);
@@ -232,9 +232,10 @@ export function EcosystemMap() {
               <span
                 className="pointer-events-none whitespace-nowrap text-[10px] uppercase tracking-[0.22em] transition-colors"
                 style={{
-                  color: active === n.id || isCore ? "#ffffff" : "rgba(255,255,255,0.55)",
-                  fontWeight: isCore ? 600 : 400,
-                  textShadow: "0 1px 8px rgba(0,0,0,0.6)",
+                  color: "#111111",
+                  fontWeight: isCore ? 700 : 500,
+                  opacity: active === n.id || isCore ? 1 : 0.75,
+                  textShadow: "0 1px 6px rgba(255,255,255,0.9), 0 0 2px rgba(255,255,255,0.9)",
                 }}
               >
                 {n.label}
@@ -244,19 +245,19 @@ export function EcosystemMap() {
         })}
       </div>
 
-      <div className="mt-8 min-h-[3rem] text-center text-[13px] leading-relaxed text-white/60">
+      <div className="mt-8 min-h-[3rem] text-center text-[13px] leading-relaxed text-ink/70">
         {activeNode && activeNode.orbit !== 0 ? (
           <span>
-            <strong className="text-white">{activeNode.label}</strong> · connects to{" "}
+            <strong className="text-ink">{activeNode.label}</strong> · connects to{" "}
             {activeNode.connects.map((c, i) => (
               <span key={c}>
-                <span style={{ color: byId[c].color }}>{byId[c].label}</span>
+                <span style={{ color: byId[c].color, fontWeight: 600 }}>{byId[c].label}</span>
                 {i < activeNode.connects.length - 1 ? ", " : ""}
               </span>
             ))}
           </span>
         ) : activeNode?.orbit === 0 ? (
-          <span><strong className="text-white">Terra Belle</strong> · the gravitational core every orbit returns to.</span>
+          <span><strong className="text-ink">Terra Belle</strong> · the gravitational core every orbit returns to.</span>
         ) : (
           <span className="opacity-70">Hover any orbiting body to trace its relationships through the ecosystem.</span>
         )}
