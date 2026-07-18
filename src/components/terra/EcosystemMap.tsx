@@ -142,8 +142,8 @@ export function EcosystemMap() {
           grad.addColorStop(0, n.color);
           grad.addColorStop(1, byId[cid].color);
           ctx.strokeStyle = grad;
-          ctx.globalAlpha = highlighted ? 0.7 : dimmed ? 0.04 : 0.12;
-          ctx.lineWidth = highlighted ? 1.6 : 0.7;
+          ctx.globalAlpha = highlighted ? 0.85 : dimmed ? 0.08 : 0.28;
+          ctx.lineWidth = highlighted ? 1.8 : 0.9;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(b.x, b.y);
