@@ -232,9 +232,10 @@ export function EcosystemMap() {
               <span
                 className="pointer-events-none whitespace-nowrap text-[10px] uppercase tracking-[0.22em] transition-colors"
                 style={{
-                  color: active === n.id || isCore ? "#ffffff" : "rgba(255,255,255,0.55)",
-                  fontWeight: isCore ? 600 : 400,
-                  textShadow: "0 1px 8px rgba(0,0,0,0.6)",
+                  color: "#111111",
+                  fontWeight: isCore ? 700 : 500,
+                  opacity: active === n.id || isCore ? 1 : 0.75,
+                  textShadow: "0 1px 6px rgba(255,255,255,0.9), 0 0 2px rgba(255,255,255,0.9)",
                 }}
               >
                 {n.label}
