@@ -15,9 +15,18 @@ export const SECTIONS = [
   { id: "future", label: "Future" },
 ];
 
+const NAV_LINKS = [
+  { to: "/planet", label: "Planet" },
+  { to: "/ecosystem", label: "Ecosystem" },
+  { to: "/circular", label: "Circular" },
+  { to: "/impact", label: "Impact" },
+  { to: "/verticals", label: "Verticals" },
+] as const;
+
 export function TopNav() {
   const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     let last = window.scrollY;
@@ -32,36 +41,39 @@ export function TopNav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
   return (
     <header
-      className={`fixed left-1/2 top-6 z-50 -translate-x-1/2 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+      className={`fixed left-1/2 top-4 z-50 w-[calc(100%-1.5rem)] max-w-[min(96vw,880px)] -translate-x-1/2 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:top-6 sm:w-auto ${
         hidden ? "-translate-y-32 opacity-0" : "translate-y-0 opacity-100"
       }`}
     >
       <div
-        className="flex items-center gap-6 rounded-full border border-black/5 px-5 py-2.5 backdrop-blur-xl transition-all duration-500"
+        className="flex items-center gap-3 rounded-full border border-black/5 px-3 py-2 backdrop-blur-xl transition-all duration-500 sm:gap-6 sm:px-5 sm:py-2.5"
         style={{
           background: scrolled ? "rgba(255,255,255,0.78)" : "rgba(255,255,255,0.55)",
           boxShadow: scrolled ? "0 18px 40px -20px rgba(17,17,17,0.18)" : "var(--shadow-soft)",
         }}
       >
-        <Link to="/" data-magnetic className="group flex items-center gap-2">
-          <span className="relative">
+        <Link to="/" data-magnetic className="group flex min-w-0 items-center gap-2">
+          <span className="relative shrink-0">
             <Logo size={22} />
             <span className="absolute inset-0 rounded-full opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                   style={{ boxShadow: "0 0 18px rgba(244,176,0,0.6)" }} />
           </span>
-          <span className="text-[13px] font-medium tracking-tight">Terra Belle</span>
+          <span className="truncate text-[13px] font-medium tracking-tight">Terra Belle</span>
         </Link>
         <span className="hidden h-4 w-px bg-black/10 sm:block" />
         <nav className="hidden items-center gap-5 text-[12.5px] text-mist sm:flex">
-          {[
-            { to: "/planet", label: "Planet" },
-            { to: "/ecosystem", label: "Ecosystem" },
-            { to: "/circular", label: "Circular" },
-            { to: "/impact", label: "Impact" },
-            { to: "/verticals", label: "Verticals" },
-          ].map((s) => (
+          {NAV_LINKS.map((s) => (
             <Link
               key={s.to}
               to={s.to}
@@ -74,15 +86,81 @@ export function TopNav() {
             </Link>
           ))}
         </nav>
-        <Link
-          to="/verticals"
-          data-magnetic
-          className="group relative overflow-hidden rounded-full bg-ink px-3.5 py-1.5 text-[12px] font-medium text-white transition-all duration-300 hover:scale-[1.04]"
-        >
-          <span className="relative z-10">Explore</span>
-          <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-gold via-green to-earth transition-transform duration-500 group-hover:translate-x-0" />
-        </Link>
+        <div className="ml-auto flex items-center gap-2">
+          <Link
+            to="/verticals"
+            data-magnetic
+            className="group relative hidden overflow-hidden rounded-full bg-ink px-3.5 py-1.5 text-[12px] font-medium text-white transition-all duration-300 hover:scale-[1.04] sm:inline-flex"
+          >
+            <span className="relative z-10">Explore</span>
+            <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-gold via-green to-earth transition-transform duration-500 group-hover:translate-x-0" />
+          </Link>
+          <button
+            type="button"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-nav-menu"
+            onClick={() => setMenuOpen((v) => !v)}
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-black/10 bg-white/70 text-ink transition hover:bg-white sm:hidden"
+          >
+            <span className="relative block h-3.5 w-4">
+              <span
+                className="absolute left-0 right-0 h-[1.75px] rounded-full bg-ink transition-all duration-300"
+                style={{
+                  top: menuOpen ? "50%" : "2px",
+                  transform: menuOpen ? "translateY(-50%) rotate(45deg)" : "none",
+                }}
+              />
+              <span
+                className="absolute left-0 right-0 top-1/2 h-[1.75px] -translate-y-1/2 rounded-full bg-ink transition-opacity duration-200"
+                style={{ opacity: menuOpen ? 0 : 1 }}
+              />
+              <span
+                className="absolute left-0 right-0 h-[1.75px] rounded-full bg-ink transition-all duration-300"
+                style={{
+                  bottom: menuOpen ? "auto" : "2px",
+                  top: menuOpen ? "50%" : "auto",
+                  transform: menuOpen ? "translateY(-50%) rotate(-45deg)" : "none",
+                }}
+              />
+            </span>
+          </button>
+        </div>
+      </div>
 
+      {/* Mobile dropdown */}
+      <div
+        id="mobile-nav-menu"
+        className={`sm:hidden overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          menuOpen ? "mt-2 max-h-[420px] opacity-100" : "mt-0 max-h-0 opacity-0"
+        }`}
+        aria-hidden={!menuOpen}
+      >
+        <div
+          className="rounded-3xl border border-black/5 bg-white/90 p-3 backdrop-blur-xl"
+          style={{ boxShadow: "0 18px 40px -20px rgba(17,17,17,0.22)" }}
+        >
+          <nav className="flex flex-col">
+            {NAV_LINKS.map((s) => (
+              <Link
+                key={s.to}
+                to={s.to}
+                onClick={() => setMenuOpen(false)}
+                activeProps={{ className: "text-ink bg-black/[0.04]" }}
+                className="rounded-2xl px-4 py-3 text-[14px] font-medium text-mist transition hover:bg-black/[0.04] hover:text-ink"
+              >
+                {s.label}
+              </Link>
+            ))}
+            <Link
+              to="/verticals"
+              onClick={() => setMenuOpen(false)}
+              className="mt-2 rounded-full bg-ink px-4 py-3 text-center text-[13px] font-medium text-white transition hover:opacity-90"
+            >
+              Explore
+            </Link>
+          </nav>
+        </div>
       </div>
     </header>
   );
