@@ -16,14 +16,17 @@ export function Section({
   className?: string;
 }) {
   return (
-    <section id={id} className={`relative mx-auto w-full max-w-7xl px-6 py-32 md:py-44 ${className}`}>
+    <section
+      id={id}
+      className={`relative mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 sm:py-24 md:py-32 lg:py-44 ${className}`}
+    >
       {(eyebrow || index) && (
-        <div className="mb-10 flex items-center justify-between text-[11px] uppercase tracking-[0.28em] text-mist">
-          <span className="flex items-center gap-3">
-            <span className="inline-block h-px w-8 bg-mist/40" />
-            {eyebrow}
+        <div className="mb-6 flex items-center justify-between gap-3 text-[10.5px] uppercase tracking-[0.24em] text-mist sm:mb-10 sm:text-[11px] sm:tracking-[0.28em]">
+          <span className="flex min-w-0 items-center gap-3">
+            <span className="inline-block h-px w-6 shrink-0 bg-mist/40 sm:w-8" />
+            <span className="truncate">{eyebrow}</span>
           </span>
-          {index && <span>{index}</span>}
+          {index && <span className="shrink-0">{index}</span>}
         </div>
       )}
       {children}
