@@ -152,13 +152,17 @@ export function EcosystemMap() {
       }
       ctx.globalAlpha = 1;
 
-      // move node buttons + apply pulse
+      // move node buttons; pulse only the dot halo, never the label
       for (const n of NODES) {
         const el = nodeRefs.current[n.id];
         if (!el) continue;
         const p = pos[n.id];
         const pulse = 1 + Math.sin(t * 1.6 + n.orbit * 1.2 + n.id.length) * 0.12;
-        el.style.transform = `translate3d(${p.x}px, ${p.y}px, 0) translate(-50%, -50%) scale(${pulse})`;
+        // Round to whole pixels so text stays crisp (sub-pixel transforms blur glyphs).
+        const px = Math.round(p.x);
+        const py = Math.round(p.y);
+        el.style.transform = `translate3d(${px}px, ${py}px, 0) translate(-50%, -50%)`;
+        el.style.setProperty("--pulse", pulse.toFixed(3));
       }
     };
 
@@ -170,7 +174,7 @@ export function EcosystemMap() {
     <div className="relative w-full">
       <div
         ref={wrapRef}
-        className="relative mx-auto aspect-square w-full max-w-3xl overflow-hidden"
+        className="relative mx-auto aspect-square w-full max-w-3xl px-4 sm:px-8"
       >
         <canvas ref={canvasRef} className="absolute inset-0" aria-hidden />
 
@@ -192,7 +196,13 @@ export function EcosystemMap() {
               style={{ opacity: dim ? 0.28 : 1 }}
               aria-label={n.label}
             >
-              <span className="relative grid place-items-center">
+              <span
+                className="relative grid place-items-center"
+                style={{
+                  transform: "scale(var(--pulse, 1))",
+                  transformOrigin: "center",
+                }}
+              >
                 {/* soft halo */}
                 <span
                   aria-hidden
@@ -230,12 +240,14 @@ export function EcosystemMap() {
                 />
               </span>
               <span
-                className="pointer-events-none whitespace-nowrap text-[10px] uppercase tracking-[0.22em] transition-colors"
+                className="pointer-events-none whitespace-nowrap text-[9px] font-semibold uppercase tracking-[0.18em] transition-colors sm:text-[10px] sm:tracking-[0.22em]"
                 style={{
                   color: "#111111",
-                  fontWeight: isCore ? 700 : 500,
-                  opacity: active === n.id || isCore ? 1 : 0.75,
-                  textShadow: "0 1px 6px rgba(255,255,255,0.9), 0 0 2px rgba(255,255,255,0.9)",
+                  fontWeight: isCore ? 700 : 600,
+                  opacity: active === n.id || isCore ? 1 : 0.85,
+                  textShadow: "0 0 6px rgba(255,255,255,0.95), 0 0 2px rgba(255,255,255,1)",
+                  WebkitFontSmoothing: "antialiased",
+                  transform: "translateZ(0)",
                 }}
               >
                 {n.label}
