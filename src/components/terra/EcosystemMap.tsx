@@ -152,13 +152,17 @@ export function EcosystemMap() {
       }
       ctx.globalAlpha = 1;
 
-      // move node buttons + apply pulse
+      // move node buttons; pulse only the dot halo, never the label
       for (const n of NODES) {
         const el = nodeRefs.current[n.id];
         if (!el) continue;
         const p = pos[n.id];
         const pulse = 1 + Math.sin(t * 1.6 + n.orbit * 1.2 + n.id.length) * 0.12;
-        el.style.transform = `translate3d(${p.x}px, ${p.y}px, 0) translate(-50%, -50%) scale(${pulse})`;
+        // Round to whole pixels so text stays crisp (sub-pixel transforms blur glyphs).
+        const px = Math.round(p.x);
+        const py = Math.round(p.y);
+        el.style.transform = `translate3d(${px}px, ${py}px, 0) translate(-50%, -50%)`;
+        el.style.setProperty("--pulse", pulse.toFixed(3));
       }
     };
 
