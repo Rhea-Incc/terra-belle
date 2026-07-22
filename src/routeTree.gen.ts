@@ -15,11 +15,17 @@ import { Route as McpRouteImport } from './routes/mcp'
 import { Route as ImpactRouteImport } from './routes/impact'
 import { Route as EcosystemRouteImport } from './routes/ecosystem'
 import { Route as CircularRouteImport } from './routes/circular'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VerticalsIndexRouteImport } from './routes/verticals.index'
 import { Route as VerticalsSlugRouteImport } from './routes/verticals.$slug'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminVerticalsRouteImport } from './routes/_authenticated/admin.verticals'
+import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_authenticated/admin.applications'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 
 const VerticalsRoute = VerticalsRouteImport.update({
@@ -52,6 +58,15 @@ const CircularRoute = CircularRouteImport.update({
   path: '/circular',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -67,6 +82,11 @@ const VerticalsSlugRoute = VerticalsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => VerticalsRoute,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const Char91DotwellKnownChar93OauthProtectedResourceRoute =
   Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
     id: '/.well-known/oauth-protected-resource',
@@ -79,6 +99,23 @@ const Char91DotmcpChar93ListToolsRoute =
     path: '/.mcp/list-tools',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminVerticalsRoute =
+  AuthenticatedAdminVerticalsRouteImport.update({
+    id: '/verticals',
+    path: '/verticals',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminApplicationsRoute =
+  AuthenticatedAdminApplicationsRouteImport.update({
+    id: '/applications',
+    path: '/applications',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const Char91DotmcpChar93InvokeToolToolRoute =
   Char91DotmcpChar93InvokeToolToolRouteImport.update({
     id: '/.mcp/invoke-tool/$tool',
@@ -88,6 +125,7 @@ const Char91DotmcpChar93InvokeToolToolRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/circular': typeof CircularRoute
   '/ecosystem': typeof EcosystemRoute
   '/impact': typeof ImpactRoute
@@ -96,12 +134,17 @@ export interface FileRoutesByFullPath {
   '/verticals': typeof VerticalsRouteWithChildren
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/verticals/$slug': typeof VerticalsSlugRoute
   '/verticals/': typeof VerticalsIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
+  '/admin/verticals': typeof AuthenticatedAdminVerticalsRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/circular': typeof CircularRoute
   '/ecosystem': typeof EcosystemRoute
   '/impact': typeof ImpactRoute
@@ -112,10 +155,15 @@ export interface FileRoutesByTo {
   '/verticals/$slug': typeof VerticalsSlugRoute
   '/verticals': typeof VerticalsIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
+  '/admin/verticals': typeof AuthenticatedAdminVerticalsRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
   '/circular': typeof CircularRoute
   '/ecosystem': typeof EcosystemRoute
   '/impact': typeof ImpactRoute
@@ -124,14 +172,19 @@ export interface FileRoutesById {
   '/verticals': typeof VerticalsRouteWithChildren
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/verticals/$slug': typeof VerticalsSlugRoute
   '/verticals/': typeof VerticalsIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/_authenticated/admin/applications': typeof AuthenticatedAdminApplicationsRoute
+  '/_authenticated/admin/verticals': typeof AuthenticatedAdminVerticalsRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/circular'
     | '/ecosystem'
     | '/impact'
@@ -140,12 +193,17 @@ export interface FileRouteTypes {
     | '/verticals'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
+    | '/admin'
     | '/verticals/$slug'
     | '/verticals/'
     | '/.mcp/invoke-tool/$tool'
+    | '/admin/applications'
+    | '/admin/verticals'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/circular'
     | '/ecosystem'
     | '/impact'
@@ -156,9 +214,14 @@ export interface FileRouteTypes {
     | '/verticals/$slug'
     | '/verticals'
     | '/.mcp/invoke-tool/$tool'
+    | '/admin/applications'
+    | '/admin/verticals'
+    | '/admin'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
+    | '/auth'
     | '/circular'
     | '/ecosystem'
     | '/impact'
@@ -167,13 +230,19 @@ export interface FileRouteTypes {
     | '/verticals'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
+    | '/_authenticated/admin'
     | '/verticals/$slug'
     | '/verticals/'
     | '/.mcp/invoke-tool/$tool'
+    | '/_authenticated/admin/applications'
+    | '/_authenticated/admin/verticals'
+    | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
   CircularRoute: typeof CircularRoute
   EcosystemRoute: typeof EcosystemRoute
   ImpactRoute: typeof ImpactRoute
@@ -229,6 +298,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CircularRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -250,6 +333,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VerticalsSlugRouteImport
       parentRoute: typeof VerticalsRoute
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/.well-known/oauth-protected-resource': {
       id: '/.well-known/oauth-protected-resource'
       path: '/.well-known/oauth-protected-resource'
@@ -264,6 +354,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/verticals': {
+      id: '/_authenticated/admin/verticals'
+      path: '/verticals'
+      fullPath: '/admin/verticals'
+      preLoaderRoute: typeof AuthenticatedAdminVerticalsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/applications': {
+      id: '/_authenticated/admin/applications'
+      path: '/applications'
+      fullPath: '/admin/applications'
+      preLoaderRoute: typeof AuthenticatedAdminApplicationsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/.mcp/invoke-tool/$tool': {
       id: '/.mcp/invoke-tool/$tool'
       path: '/.mcp/invoke-tool/$tool'
@@ -273,6 +384,32 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminApplicationsRoute: typeof AuthenticatedAdminApplicationsRoute
+  AuthenticatedAdminVerticalsRoute: typeof AuthenticatedAdminVerticalsRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminApplicationsRoute: AuthenticatedAdminApplicationsRoute,
+  AuthenticatedAdminVerticalsRoute: AuthenticatedAdminVerticalsRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface VerticalsRouteChildren {
   VerticalsSlugRoute: typeof VerticalsSlugRoute
@@ -290,6 +427,8 @@ const VerticalsRouteWithChildren = VerticalsRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
   CircularRoute: CircularRoute,
   EcosystemRoute: EcosystemRoute,
   ImpactRoute: ImpactRoute,
@@ -304,3 +443,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
