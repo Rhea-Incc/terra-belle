@@ -1,15 +1,18 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { Section, Reveal } from "@/components/terra/Section";
 import { Tilt } from "@/components/terra/Interactive";
 import { EnergyDivider } from "@/components/terra/Divider";
-import { JourneyLoop } from "@/components/terra/JourneyLoop";
 import {
   PartnerApplyDialog,
   type PartnerApplyScope,
 } from "@/components/terra/PartnerApplyDialog";
 import { getVertical, VERTICALS } from "@/lib/verticals-data";
+
+const JourneyLoop = lazy(() =>
+  import("@/components/terra/JourneyLoop").then((m) => ({ default: m.JourneyLoop })),
+);
 
 export const Route = createFileRoute("/verticals/$slug")({
   loader: ({ params }) => {
@@ -55,7 +58,33 @@ function VerticalNotFound() {
 
 function VerticalDetail() {
   const { slug } = Route.useLoaderData();
-  const v = getVertical(slug)!;
+  const source = getVertical(slug)!;
+  const [override, setOverride] = useState<any | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    import("@/integrations/supabase/client").then(({ supabase }) => {
+      supabase
+        .from("verticals")
+        .select("title,short,summary,hero,mission,vision,active")
+        .eq("slug", slug)
+        .maybeSingle()
+        .then(({ data }) => {
+          if (!cancelled) setOverride(data);
+        });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [slug]);
+  const v = {
+    ...source,
+    title: override?.title ?? source.title,
+    short: override?.short ?? source.short,
+    summary: override?.summary ?? source.summary,
+    hero: override?.hero ?? source.hero,
+    mission: override?.mission ?? source.mission,
+    vision: override?.vision ?? source.vision,
+  };
   const Icon = v.Icon;
   const rootRef = useRef<HTMLDivElement>(null);
   const [applyScope, setApplyScope] = useState<PartnerApplyScope | null>(null);
@@ -408,7 +437,9 @@ function VerticalDetail() {
 
       {/* Journey Loop — motion language mirrors the chapter rail */}
       <Section id={`journey-${v.slug}`} eyebrow="Continue the loop">
-        <JourneyLoop active={v} />
+        <Suspense fallback={<div className="h-40" />}>
+          <JourneyLoop active={v} />
+        </Suspense>
       </Section>
 
       <PartnerApplyDialog

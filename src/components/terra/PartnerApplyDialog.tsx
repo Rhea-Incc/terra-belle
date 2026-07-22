@@ -2,6 +2,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { z } from "zod";
+import { useServerFn } from "@tanstack/react-start";
+import { submitPartnerApplication } from "@/lib/partner.functions";
 import type { Vertical, VerticalProject } from "@/lib/verticals-data";
 
 /**
@@ -101,6 +103,7 @@ export function PartnerApplyDialog({
   const [status, setStatus] = useState<"idle" | "submitting" | "success">("idle");
   const dialogRef = useRef<HTMLDivElement>(null);
   const firstFieldRef = useRef<HTMLInputElement>(null);
+  const submit = useServerFn(submitPartnerApplication);
 
   const title = useMemo(() => {
     if (!scope) return "Partner with Terra Belle";
@@ -156,25 +159,20 @@ export function PartnerApplyDialog({
     }
     setStatus("submitting");
     try {
-      const record = {
-        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-        submittedAt: new Date().toISOString(),
-        scope:
-          scope.kind === "vertical"
-            ? { kind: "vertical", vertical: scope.vertical.slug }
-            : {
-                kind: "project",
-                vertical: scope.vertical.slug,
-                project: scope.project.id,
-                projectName: scope.project.name,
-              },
-        values: parsed.data,
-      };
-      const prev = JSON.parse(localStorage.getItem("tb.partner.apps") || "[]");
-      prev.push(record);
-      localStorage.setItem("tb.partner.apps", JSON.stringify(prev));
-      // Small delay so the transition reads intentionally
-      await new Promise((r) => setTimeout(r, 400));
+      await submit({
+        data: {
+          scopeKind: scope.kind,
+          verticalSlug: scope.vertical.slug,
+          projectId: scope.kind === "project" ? scope.project.id : null,
+          projectName: scope.kind === "project" ? scope.project.name : null,
+          name: parsed.data.name,
+          organization: parsed.data.organization,
+          email: parsed.data.email,
+          role: parsed.data.role ?? null,
+          contribution: parsed.data.contribution,
+          message: parsed.data.message,
+        },
+      });
       setStatus("success");
     } catch {
       setStatus("idle");

@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -12,6 +13,7 @@ import { Analytics } from "@vercel/analytics/react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { logPageView } from "../lib/analytics.functions";
 
 function NotFoundComponent() {
   return (
@@ -124,6 +126,24 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    let sid = sessionStorage.getItem("tb.sid");
+    if (!sid) {
+      sid = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+      sessionStorage.setItem("tb.sid", sid);
+    }
+    logPageView({
+      data: {
+        path: pathname,
+        referrer: document.referrer || null,
+        userAgent: navigator.userAgent,
+        sessionId: sid,
+      },
+    }).catch(() => {});
+  }, [pathname]);
 
   return (
     <QueryClientProvider client={queryClient}>
