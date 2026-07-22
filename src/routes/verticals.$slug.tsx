@@ -58,7 +58,33 @@ function VerticalNotFound() {
 
 function VerticalDetail() {
   const { slug } = Route.useLoaderData();
-  const v = getVertical(slug)!;
+  const source = getVertical(slug)!;
+  const [override, setOverride] = useState<any | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    import("@/integrations/supabase/client").then(({ supabase }) => {
+      supabase
+        .from("verticals")
+        .select("title,short,summary,hero,mission,vision,active")
+        .eq("slug", slug)
+        .maybeSingle()
+        .then(({ data }) => {
+          if (!cancelled) setOverride(data);
+        });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [slug]);
+  const v = {
+    ...source,
+    title: override?.title ?? source.title,
+    short: override?.short ?? source.short,
+    summary: override?.summary ?? source.summary,
+    hero: override?.hero ?? source.hero,
+    mission: override?.mission ?? source.mission,
+    vision: override?.vision ?? source.vision,
+  };
   const Icon = v.Icon;
   const rootRef = useRef<HTMLDivElement>(null);
   const [applyScope, setApplyScope] = useState<PartnerApplyScope | null>(null);
