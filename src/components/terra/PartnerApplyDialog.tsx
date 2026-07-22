@@ -103,6 +103,7 @@ export function PartnerApplyDialog({
   const [status, setStatus] = useState<"idle" | "submitting" | "success">("idle");
   const dialogRef = useRef<HTMLDivElement>(null);
   const firstFieldRef = useRef<HTMLInputElement>(null);
+  const submit = useServerFn(submitPartnerApplication);
 
   const title = useMemo(() => {
     if (!scope) return "Partner with Terra Belle";
