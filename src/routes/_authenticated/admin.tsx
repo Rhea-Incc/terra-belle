@@ -88,7 +88,7 @@ function AdminLayout() {
             return (
               <Link
                 key={t.to}
-                to={t.to}
+                to={t.to as any}
                 className={`rounded-full px-4 py-1.5 text-[12.5px] transition ${
                   active ? "bg-ink text-white" : "text-ink/70 hover:bg-black/5"
                 }`}
