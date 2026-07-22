@@ -411,7 +411,9 @@ function VerticalDetail() {
 
       {/* Journey Loop — motion language mirrors the chapter rail */}
       <Section id={`journey-${v.slug}`} eyebrow="Continue the loop">
-        <JourneyLoop active={v} />
+        <Suspense fallback={<div className="h-40" />}>
+          <JourneyLoop active={v} />
+        </Suspense>
       </Section>
 
       <PartnerApplyDialog
