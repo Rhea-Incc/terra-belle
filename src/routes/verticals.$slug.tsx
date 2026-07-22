@@ -1,15 +1,18 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { Section, Reveal } from "@/components/terra/Section";
 import { Tilt } from "@/components/terra/Interactive";
 import { EnergyDivider } from "@/components/terra/Divider";
-import { JourneyLoop } from "@/components/terra/JourneyLoop";
 import {
   PartnerApplyDialog,
   type PartnerApplyScope,
 } from "@/components/terra/PartnerApplyDialog";
 import { getVertical, VERTICALS } from "@/lib/verticals-data";
+
+const JourneyLoop = lazy(() =>
+  import("@/components/terra/JourneyLoop").then((m) => ({ default: m.JourneyLoop })),
+);
 
 export const Route = createFileRoute("/verticals/$slug")({
   loader: ({ params }) => {
